@@ -1,17 +1,21 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Mi Aplicación{% endblock %}</title>
-    <link rel="stylesheet" href="/analytix/ai_agent/static/styles.css">
+    <link rel="stylesheet" href="{% static 'styles.css'%}">
+    {% block styles %} 
+    
+    {% endblock %}
 </head>
 <body>
     <!-- Sidebar -->
     <div class="sidebar">
         <!-- Logo de la app -->
         <div class="logo-section">
-            <a href="{% url 'home' %}" class="logo">
+            <a href="" class="logo">
                 <div class="logo-icon">A</div>
                 <span>AnalytiX</span>
             </a>
@@ -20,18 +24,18 @@
         <!-- Navegación principal -->
         <nav class="nav">
             <!-- Home -->
-            <a href="{% url 'home' %}" class="nav-item {% block home_active %}{% endblock %}">
+            <a href="" class="nav-item {% block home_active %}{% endblock %}">
                 <span class="nav-icon">🏠</span>
                 <span>Home</span>
             </a>
           <!-- Connection -->
-            <a href="{% url 'historialChats' %}" class="nav-item {% block connection_active %}{% endblock %}">
+            <a href="" class="nav-item">
                 <span class="nav-icon">💬</span>
                 <span>Chats</span>
             </a>
 
             <!-- Connection -->
-            <a href="{% url 'connection' %}" class="nav-item {% block connection_active %}{% endblock %}">
+            <a href="" class="nav-item {% block connection_active %}{% endblock %}">
                 <span class="nav-icon">🔌</span>
                 <span>Connection</span>
             </a>

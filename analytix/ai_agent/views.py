@@ -1,7 +1,13 @@
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from services.bi_agent import bi_agent
+from .services import bi_agent
+
+
+def vistaHome(request):
+    if request.method == "GET":
+        return render(request,"account/home.html")
+    
 
 @api_view(["POST"])
 def ai_query(request):
@@ -14,3 +20,5 @@ def ai_query(request):
     return Response({
         "respuesta": r
     })
+
+

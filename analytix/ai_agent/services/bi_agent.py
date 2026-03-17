@@ -1,7 +1,7 @@
-from services.llm_service import ask_llm
-from services.db_service import ejecutar_sql
-from services.validator_sql import validar_sql
-from services.sql_service import generar_sql
+from .llm_service import ask_llm
+from .db_service import ejecutar_sql
+from .validator_sql import validar_sql
+from .sql_service import generar_sql
 
 
 def bi_agent(pregunta):
