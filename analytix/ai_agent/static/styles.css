@@ -9,14 +9,14 @@
         }
 
         body {
-            background-color: #f5f5f5;
+            background-color: #edf1f9;
             min-height: 100vh;
             display: flex;
         }
 
         /* Sidebar */
         .sidebar {
-            width: 280px;
+            width: auto;
             background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
             color: white;
             height: 100vh;
@@ -47,22 +47,48 @@
         }
 
         .logo-icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            font-weight: bold;
-            transform: rotate(10deg);
-            transition: transform 0.3s;
-        }
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #e3dd16 0%, #7b17e1 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
 
-        .logo:hover .logo-icon {
-            transform: rotate(0deg);
-        }
+    /* Animación continua */
+    animation: floatRotate 4s ease-in-out infinite;
+}
+
+/* Animación bonita y suave */
+@keyframes floatRotate {
+    0% {
+        transform: rotate(10deg) translateY(0px) scale(1);
+        
+    }
+    25% {
+        transform: rotate(5deg) translateY(-4px) scale(1.05);
+       
+    }
+    50% {
+        transform: rotate(0deg) translateY(0px) scale(1);
+        
+    }
+    75% {
+        transform: rotate(5deg) translateY(4px) scale(1.05);
+        
+    }
+    100% {
+        transform: rotate(10deg) translateY(0px) scale(1);
+    }
+}
+
+/* Efecto adicional al hover */
+/*    .logo:hover .logo-icon {
+        animation-play-state: paused;
+        transform: rotate(0deg) scale(1.1);
+}*/
 
         /* Navegación */
         .nav {
@@ -172,7 +198,7 @@
             flex: 1;
             margin-left: 280px;
             padding: 30px;
-            background-color: #f5f5f5;
+            background-color: #edf1f9;
             min-height: 100vh;
         }
 
@@ -188,17 +214,18 @@
 
         .page-title {
             font-size: 28px;
-            color: #333;
+            color: #667eea;
             font-weight: 600;
         }
 
         .page-title span {
-            color: #667eea;
+            color: #7192d185;
+  
         }
 
         /* Tarjetas para contenido */
         .content-card {
-            background: white;
+            background: #7192d185;
             border-radius: 20px;
             padding: 25px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);

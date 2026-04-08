@@ -4,10 +4,6 @@
 
 {% block styles %}
 <style>
-body{
-    background: #f7f7f8;
-    font-family: Arial, Helvetica, sans-serif;
-}
 
 .chat-container{
     width: 100%;
@@ -15,7 +11,7 @@ body{
     margin: auto;
     display: flex;
     flex-direction: column;
-    height: 90vh;
+    height: 70vh;
 }
 
 .chat-box{
@@ -87,7 +83,36 @@ body{
 
     <div class="chat-input-container">
         <textarea id="chatInput" placeholder="Escribe un mensaje..."></textarea>
-        <button onclick="enviarMensaje()">➤</button>
+        <button id="btnEnviarPrompt">➤</button>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const chatBox = document.getElementById("chatBox");
+    const input = document.getElementById("chatInput");
+    const btn = document.getElementById("btnEnviarPrompt");
+
+    input.focus()
+
+    // Función reutilizable
+    function enviarMensaje() {
+        if (input.value.trim() === "") return;
+
+        chatBox.innerText += input.value + "\n";
+        input.value = "";
+    }
+
+    // Click en botón
+    btn.addEventListener("click", enviarMensaje);
+
+    // Enter en el input
+    input.addEventListener("keydown", function(e) {
+        if (e.key === "Enter") {
+            e.preventDefault(); // evita salto de línea si es textarea
+            enviarMensaje();
+        }
+    });
+</script>
 {% endblock %}

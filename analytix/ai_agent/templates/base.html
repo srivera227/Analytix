@@ -4,8 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Mi Aplicación{% endblock %}</title>
+    <title>{% block title %}AnalytiX{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'styles.css'%}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=wand_stars" />
     {% block styles %} 
     
     {% endblock %}
@@ -16,28 +17,33 @@
         <!-- Logo de la app -->
         <div class="logo-section">
             <a href="" class="logo">
-                <div class="logo-icon">A</div>
+                <div class="logo-icon"><span class="material-symbols-outlined">wand_stars</span></div>
                 <span>AnalytiX</span>
             </a>
         </div>
 
         <!-- Navegación principal -->
         <nav class="nav">
-            <!-- Home -->
-            <a href="" class="nav-item {% block home_active %}{% endblock %}">
-                <span class="nav-icon">🏠</span>
-                <span>Home</span>
-            </a>
-          <!-- Connection -->
+          
+          <!-- Chats -->
             <a href="" class="nav-item">
                 <span class="nav-icon">💬</span>
                 <span>Chats</span>
             </a>
-
             <!-- Connection -->
             <a href="" class="nav-item {% block connection_active %}{% endblock %}">
                 <span class="nav-icon">🔌</span>
                 <span>Connection</span>
+            </a>
+             <!-- Logs -->
+            <a href="" class="nav-item">
+                <span class="nav-icon">📉</span>
+                <span>Logs</span>
+            </a>
+              <!-- Logs -->
+            <a href="" class="nav-item">
+                <span class="nav-icon">✉️</span>
+                <span>Contact</span>
             </a>
 
                 
@@ -93,4 +99,7 @@
 
    
 </body>
+
+{% block scripts %}
+{% endblock %}
 </html>
