@@ -1,118 +1,447 @@
 {% extends 'base.html' %}
 
-{% load static %}
-
 {% block styles %}
+
 <style>
 
-.chat-container{
-    width: 100%;
-    max-width: 700px;
-    margin: auto;
-    display: flex;
-    flex-direction: column;
-    height: 70vh;
+.chat-page{
+
+    height:100%;
+
+    display:flex;
+    flex-direction:column;
+
+    overflow:hidden;
 }
 
+/* ==========================
+   MENSAJES
+========================== */
+
 .chat-box{
-    flex: 1;
-    overflow-y: auto;
-    padding: 20px;
+
+    flex:1;
+
+    overflow-y:auto;
+
+    padding:30px 20px 120px;
+
+    display:flex;
+    flex-direction:column;
+
+    min-height:0;
+}
+
+.messages-container{
+
+    width:100%;
+
+    max-width:850px;
+
+    margin:auto;
+
+    display:flex;
+    flex-direction:column;
+
+    gap:20px;
+}
+
+.message-row{
+
+    display:flex;
+}
+
+.message-row.user{
+    justify-content:flex-end;
+}
+
+.message-row.bot{
+    justify-content:flex-start;
+}
+
+.message{
+
+    max-width:80%;
+
+    padding:14px 18px;
+
+    border-radius:20px;
+
+    line-height:1.6;
+
+    font-size:15px;
+
+    white-space:pre-wrap;
+}
+
+.user .message{
+
+    background:#10a37f;
+
+    color:white;
+
+    border-bottom-right-radius:6px;
+}
+
+.bot .message{
+
+    color:var(--text);
+
+    border-bottom-left-radius:6px;
+}
+
+/* ==========================
+   PANTALLA VACÍA
+========================== */
+
+.welcome{
+
+    flex:1;
+
+    display:flex;
+    flex-direction:column;
+
+    justify-content:center;
+    align-items:center;
+
+    text-align:center;
+}
+
+.welcome h1{
+
+    font-size:42px;
+
+    margin-bottom:12px;
+
+    font-weight:700;
+}
+
+.welcome p{
+
+    color:var(--text-secondary);
+
+    font-size:16px;
+}
+
+.welcome-icon{
+
+    width:80px;
+    height:80px;
+
+    border-radius:24px;
+
+    margin-bottom:20px;
+
+    background:linear-gradient(
+        135deg,
+        #10a37f,
+        #0ea5e9
+    );
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    color:white;
+}
+
+/* ==========================
+   INPUT
+========================== */
+
+.chat-footer{
+
+    padding:20px;
+
+    background:var(--bg);
+}
+
+.chat-input-wrapper{
+
+    max-width:850px;
+
+    margin:auto;
 }
 
 .chat-input-container{
-    display: flex;
-    align-items: center;
-    background: white;
-    border-radius: 25px;
-    border: 1px solid #ddd;
-    padding: 10px;
-    box-shadow: 0px 2px 8px rgba(0,0,0,0.1);
+
+    display:flex;
+    align-items:flex-end;
+
+    gap:10px;
+
+    background:var(--card);
+
+    border:1px solid rgba(255,255,255,.08);
+
+    border-radius:28px;
+
+    padding:12px;
 }
 
-.chat-input-container textarea{
-    flex: 1;
-    border: none;
-    outline: none;
-    resize: none;
-    font-size: 16px;
-    padding: 10px;
+.chat-input{
+
+    flex:1;
+
+    border:none;
+
+    outline:none;
+
+    resize:none;
+
+    background:transparent;
+
+    color:var(--text);
+
+    font-size:15px;
+
+    max-height:180px;
+
+    min-height:24px;
 }
 
-.chat-input-container button{
-    background: #10a37f;
-    border: none;
-    color: white;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    cursor: pointer;
-    font-size: 18px;
+.send-btn{
+
+    width:42px;
+    height:42px;
+
+    border:none;
+
+    border-radius:50%;
+
+    background:#10a37f;
+
+    color:white;
+
+    cursor:pointer;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
 }
 
-.chat-input-container button:hover{
-    background: #0d8f6f;
+.send-btn:hover{
+
+    background:#0d8f6f;
 }
 
-.mensaje{
-    margin: 10px 0;
-    padding: 10px;
-    border-radius: 10px;
-    max-width: 70%;
+/* ==========================
+   LOADING
+========================== */
+
+.typing{
+
+    display:flex;
+    gap:5px;
+
+    padding:15px;
 }
 
-.user{
-    background: #10a37f;
-    color: white;
-    margin-left: auto;
+.typing span{
+
+    width:8px;
+    height:8px;
+
+    border-radius:50%;
+
+    background:#999;
+
+    animation:bounce 1s infinite;
 }
 
-.bot{
-    background: #e5e5e5;
+.typing span:nth-child(2){
+    animation-delay:.2s;
 }
+
+.typing span:nth-child(3){
+    animation-delay:.4s;
+}
+
+@keyframes bounce{
+
+    0%,100%{
+        transform:translateY(0);
+    }
+
+    50%{
+        transform:translateY(-6px);
+    }
+}
+
 </style>
-{% endblock %}
 
+{% endblock %}
 
 {% block content %}
 
-<div class="chat-container">
-    <div class="chat-box" id="chatBox">
-        <!-- mensajes -->
+<div class="chat-page">
+
+
+<div class="chat-box" id="chatBox">
+
+    <div class="welcome" id="welcome">
+
+        <div class="welcome-icon">
+
+            <span class="material-symbols-outlined">
+                auto_awesome
+            </span>
+
+        </div>
+
+        <h1>AnalytiX</h1>
+
+        <p>
+            Consulta empleados, turnos, horas extras,
+            nómina y reportes utilizando lenguaje natural.
+        </p>
+
     </div>
 
-    <div class="chat-input-container">
-        <textarea id="chatInput" placeholder="Escribe un mensaje..."></textarea>
-        <button id="btnEnviarPrompt">➤</button>
+    <div class="messages-container"
+         id="messagesContainer">
     </div>
+
 </div>
+
+<div class="chat-footer">
+
+    <div class="chat-input-wrapper">
+
+        <div class="chat-input-container">
+
+            <textarea
+                id="chatInput"
+                class="chat-input"
+                rows="1"
+                placeholder="Pregunta algo..."
+            ></textarea>
+
+            <button
+                id="btnEnviarPrompt"
+                class="send-btn">
+
+                <span class="material-symbols-outlined">
+                    arrow_upward
+                </span>
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+</div>
+
 {% endblock %}
 
 {% block scripts %}
+
 <script>
-    const chatBox = document.getElementById("chatBox");
-    const input = document.getElementById("chatInput");
-    const btn = document.getElementById("btnEnviarPrompt");
 
-    input.focus()
+const chatBox =
+    document.getElementById("chatBox");
 
-    // Función reutilizable
-    function enviarMensaje() {
-        if (input.value.trim() === "") return;
+const messagesContainer =
+    document.getElementById("messagesContainer");
 
-        chatBox.innerText += input.value + "\n";
-        input.value = "";
-    }
+const welcome =
+    document.getElementById("welcome");
 
-    // Click en botón
-    btn.addEventListener("click", enviarMensaje);
+const input =
+    document.getElementById("chatInput");
 
-    // Enter en el input
-    input.addEventListener("keydown", function(e) {
-        if (e.key === "Enter") {
-            e.preventDefault(); // evita salto de línea si es textarea
+const btn =
+    document.getElementById("btnEnviarPrompt");
+
+/* AUTO RESIZE */
+
+input.addEventListener("input",()=>{
+
+    input.style.height = "auto";
+
+    input.style.height =
+        input.scrollHeight + "px";
+
+});
+
+/* MENSAJES */
+
+function agregarMensaje(texto,tipo){
+
+    welcome.style.display="none";
+
+    const row =
+        document.createElement("div");
+
+    row.className =
+        `message-row ${tipo}`;
+
+    const bubble =
+        document.createElement("div");
+
+    bubble.className =
+        "message";
+
+    bubble.innerText =
+        texto;
+
+    row.appendChild(bubble);
+
+    messagesContainer.appendChild(row);
+
+    chatBox.scrollTop =
+        chatBox.scrollHeight;
+}
+
+function enviarMensaje(){
+
+    const texto =
+        input.value.trim();
+
+    if(!texto) return;
+
+    agregarMensaje(texto,"user");
+
+    input.value="";
+    input.style.height="24px";
+
+    setTimeout(()=>{
+
+        agregarMensaje(
+            "Estoy procesando tu consulta con Qwen 3...",
+            "bot"
+        );
+
+    },700);
+}
+
+/* EVENTOS */
+
+btn.addEventListener(
+    "click",
+    enviarMensaje
+);
+
+input.addEventListener(
+    "keydown",
+    function(e){
+
+        if(
+            e.key==="Enter" &&
+            !e.shiftKey
+        ){
+
+            e.preventDefault();
+
             enviarMensaje();
         }
-    });
+    }
+);
+
 </script>
+
 {% endblock %}
