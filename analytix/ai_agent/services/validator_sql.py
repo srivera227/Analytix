@@ -4,7 +4,7 @@ import re
 def validar_sql(sql):
 
     sql = sql.strip()
-
+    print(f"Query generada: {sql}")
     # solo SELECT
     if not sql.lower().startswith("select"):
         raise Exception("Solo se permiten consultas SELECT")

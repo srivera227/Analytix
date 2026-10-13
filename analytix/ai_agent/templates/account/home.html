@@ -1,340 +1,1397 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block styles %}
 
 <style>
+    .chat-page {
 
-.chat-page{
+        height: 100%;
 
-    height:100%;
+        display: flex;
+        flex-direction: column;
 
-    display:flex;
-    flex-direction:column;
+        overflow: hidden;
+    }
 
-    overflow:hidden;
-}
-
-/* ==========================
+    /* ==========================
    MENSAJES
 ========================== */
 
-.chat-box{
+    .chat-box {
 
-    flex:1;
+        flex: 1;
 
-    overflow-y:auto;
+        overflow-y: auto;
 
-    padding:30px 20px 120px;
+        padding: 30px 20px 120px;
 
-    display:flex;
-    flex-direction:column;
+        display: flex;
+        flex-direction: column;
 
-    min-height:0;
-}
+        min-height: 0;
+    }
 
-.messages-container{
+    .messages-container {
 
-    width:100%;
+        width: 100%;
 
-    max-width:850px;
+        max-width: 850px;
 
-    margin:auto;
+        margin: auto;
 
-    display:flex;
-    flex-direction:column;
+        display: flex;
+        flex-direction: column;
 
-    gap:20px;
-}
+        gap: 20px;
+    }
 
-.message-row{
+    .message-row {
 
-    display:flex;
-}
+        display: flex;
+    }
 
-.message-row.user{
-    justify-content:flex-end;
-}
+    .message-row.user {
+        justify-content: flex-end;
+    }
 
-.message-row.bot{
-    justify-content:flex-start;
-}
+    .message-row.bot {
+        justify-content: flex-start;
+    }
 
-.message{
+    .message {
 
-    max-width:80%;
+        max-width: 80%;
 
-    padding:14px 18px;
+        padding: 14px 18px;
 
-    border-radius:20px;
+        border-radius: 20px;
 
-    line-height:1.6;
+        line-height: 1.6;
 
-    font-size:15px;
+        font-size: 15px;
 
-    white-space:pre-wrap;
-}
+        white-space: pre-wrap;
+    }
 
-.user .message{
+    .user .message {
 
-    background:#10a37f;
+        background: #120921;
 
-    color:white;
+        color: white;
 
-    border-bottom-right-radius:6px;
-}
+        border-bottom-right-radius: 6px;
+    }
 
-.bot .message{
+    .bot .message {
 
-    color:var(--text);
+        color: var(--text);
 
-    border-bottom-left-radius:6px;
-}
+        border-bottom-left-radius: 6px;
+    }
 
-/* ==========================
+    /* ==========================
    PANTALLA VACÍA
 ========================== */
 
-.welcome{
+    .welcome {
 
-    flex:1;
+        flex: 1;
 
-    display:flex;
-    flex-direction:column;
+        display: flex;
+        flex-direction: column;
 
-    justify-content:center;
-    align-items:center;
+        justify-content: center;
+        align-items: center;
 
-    text-align:center;
-}
+        text-align: center;
+    }
 
-.welcome h1{
+    .welcome h1 {
 
-    font-size:42px;
+        font-size: 42px;
 
-    margin-bottom:12px;
+        margin-bottom: 12px;
 
-    font-weight:700;
-}
+        font-weight: 700;
+    }
 
-.welcome p{
+    .welcome p {
 
-    color:var(--text-secondary);
+        color: var(--text-secondary);
 
-    font-size:16px;
-}
+        font-size: 16px;
+    }
 
-.welcome-icon{
+    
 
-    width:80px;
-    height:80px;
-
-    border-radius:24px;
-
-    margin-bottom:20px;
-
-    background:linear-gradient(
-        135deg,
-        #10a37f,
-        #0ea5e9
-    );
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    color:white;
-}
-
-/* ==========================
+    /* ==========================
    INPUT
 ========================== */
 
-.chat-footer{
+    .chat-footer {
 
-    padding:20px;
+        padding: 20px;
 
-    background:var(--bg);
-}
+        background: var(--bg);
+    }
 
-.chat-input-wrapper{
+    .chat-input-wrapper {
 
-    max-width:850px;
+        max-width: 850px;
 
-    margin:auto;
-}
+        margin: auto;
+    }
 
-.chat-input-container{
+    .chat-input-container {
 
-    display:flex;
-    align-items:flex-end;
+        display: flex;
+        align-items: flex-end;
 
-    gap:10px;
+        gap: 10px;
 
-    background:var(--card);
+        background: var(--card);
 
-    border:1px solid rgba(255,255,255,.08);
+        border: 1px solid rgba(255, 255, 255, .08);
 
-    border-radius:28px;
+        border-radius: 28px;
 
-    padding:12px;
-}
+        padding: 12px;
+    }
 
-.chat-input{
+    .chat-input {
 
-    flex:1;
+        flex: 1;
 
-    border:none;
+        border: none;
 
-    outline:none;
+        outline: none;
 
-    resize:none;
+        resize: none;
 
-    background:transparent;
+        background: transparent;
 
-    color:var(--text);
+        color: var(--text);
 
-    font-size:15px;
+        font-size: 15px;
 
-    max-height:180px;
+        max-height: 180px;
 
-    min-height:24px;
-}
+        min-height: 24px;
+    }
 
-.send-btn{
+    .send-btn {
 
-    width:42px;
-    height:42px;
+        width: 42px;
+        height: 42px;
 
-    border:none;
+        border: none;
 
-    border-radius:50%;
+        border-radius: 50%;
 
-    background:#10a37f;
+        background: #120921;
 
-    color:white;
+        color: white;
 
-    cursor:pointer;
+        cursor: pointer;
 
-    display:flex;
-    align-items:center;
-    justify-content:center;
-}
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-.send-btn:hover{
+    .send-btn:hover {
 
-    background:#0d8f6f;
-}
+        background: #160b29;
+    }
 
-/* ==========================
+    /* ==========================
    LOADING
 ========================== */
 
-.typing{
+    .typing {
 
-    display:flex;
-    gap:5px;
+        display: flex;
+        gap: 5px;
 
-    padding:15px;
-}
-
-.typing span{
-
-    width:8px;
-    height:8px;
-
-    border-radius:50%;
-
-    background:#999;
-
-    animation:bounce 1s infinite;
-}
-
-.typing span:nth-child(2){
-    animation-delay:.2s;
-}
-
-.typing span:nth-child(3){
-    animation-delay:.4s;
-}
-
-@keyframes bounce{
-
-    0%,100%{
-        transform:translateY(0);
+        padding: 15px;
     }
 
-    50%{
-        transform:translateY(-6px);
+    .typing span {
+
+        width: 8px;
+        height: 8px;
+
+        border-radius: 50%;
+
+        background: #999;
+
+        animation: bounce 1s infinite;
     }
+
+    .typing span:nth-child(2) {
+        animation-delay: .2s;
+    }
+
+    .typing span:nth-child(3) {
+        animation-delay: .4s;
+    }
+
+    @keyframes bounce {
+
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-6px);
+        }
+    }
+</style>
+
+<!--Estilos apra el modal dee conexion a bd-->
+<style>
+    /* ================================
+       MODAL BASE DE DATOS
+    ================================= */
+
+    .db-modal {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.65);
+        backdrop-filter: blur(5px);
+
+        display: none;
+        align-items: center;
+        justify-content: center;
+
+        z-index: 1000;
+    }
+
+    .db-modal.active {
+        display: flex;
+    }
+
+
+    /* Contenedor */
+
+    .db-modal-content {
+        width: 460px;
+        max-width: calc(100% - 30px);
+
+        background: var(--card);
+        color: var(--text);
+
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 18px;
+
+        padding: 25px;
+
+        box-shadow:
+            0 25px 80px rgba(0, 0, 0, 0.45);
+
+        animation: dbModalIn 0.2s ease;
+    }
+
+
+    @keyframes dbModalIn {
+
+        from {
+            opacity: 0;
+            transform: translateY(10px) scale(0.98);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+    }
+
+
+    /* Header */
+
+    .db-modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        margin-bottom: 25px;
+    }
+
+    .db-modal-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .db-modal-title-icon {
+        width: 38px;
+        height: 38px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 10px;
+
+        background: rgba(16, 163, 127, 0.12);
+        color: #10a37f;
+    }
+
+    .db-modal-title h2 {
+        margin: 0;
+        font-size: 19px;
+        font-weight: 600;
+    }
+
+    .db-modal-title p {
+        margin: 3px 0 0;
+        font-size: 12px;
+        color: var(--text-secondary);
+    }
+
+
+    /* Botón cerrar */
+
+    .db-close {
+        width: 36px;
+        height: 36px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border: none;
+        border-radius: 8px;
+
+        background: transparent;
+        color: var(--text-secondary);
+
+        cursor: pointer;
+
+        transition: 0.2s;
+    }
+
+    .db-close:hover {
+        background: rgba(255, 255, 255, 0.08);
+        color: var(--text);
+    }
+
+
+    /* Campos */
+
+    .db-field {
+        margin-bottom: 16px;
+    }
+
+    .db-field label {
+        display: block;
+
+        margin-bottom: 7px;
+
+        font-size: 13px;
+        font-weight: 500;
+
+        color: var(--text-secondary);
+    }
+
+
+    .db-field input,
+    .db-field select {
+
+        width: 100%;
+        box-sizing: border-box;
+
+        padding: 11px 12px;
+
+        border-radius: 9px;
+
+        border: 1px solid rgba(255, 255, 255, 0.10);
+
+        background: var(--bg);
+        color: var(--text);
+
+        outline: none;
+
+        font-family: inherit;
+        font-size: 14px;
+
+        transition: border 0.2s, box-shadow 0.2s;
+    }
+
+
+    .db-field input:focus,
+    .db-field select:focus {
+
+        border-color: #10a37f;
+
+        box-shadow:
+            0 0 0 3px rgba(16, 163, 127, 0.10);
+    }
+
+
+    /* Select */
+
+    .db-field select {
+        cursor: pointer;
+    }
+
+
+    /* Fila de campos */
+
+    .db-fields-row {
+        display: grid;
+
+        grid-template-columns: 1fr 120px;
+
+        gap: 12px;
+    }
+
+
+    /* Botón conectar */
+
+    .db-connect-btn {
+
+        width: 100%;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        gap: 8px;
+
+        margin-top: 8px;
+
+        padding: 12px;
+
+        border: none;
+        border-radius: 10px;
+
+        background: #10a37f;
+        color: white;
+
+        font-family: inherit;
+        font-size: 14px;
+        font-weight: 500;
+
+        cursor: pointer;
+
+        transition: background 0.2s, transform 0.1s;
+    }
+
+    .db-connect-btn:hover {
+        background: #0d8f6f;
+    }
+
+    .db-connect-btn:active {
+        transform: scale(0.99);
+    }
+
+    .db-connect-btn:disabled {
+        opacity: 0.6;
+        cursor: wait;
+    }
+
+
+    /* Estado de conexión */
+
+    .db-status {
+
+        display: none;
+
+        margin-top: 15px;
+
+        padding: 11px 12px;
+
+        border-radius: 9px;
+
+        font-size: 13px;
+
+        line-height: 1.4;
+    }
+
+
+    .db-status.success {
+
+        display: block;
+
+        background: rgba(16, 163, 127, 0.12);
+        color: #10a37f;
+
+        border: 1px solid rgba(16, 163, 127, 0.20);
+    }
+
+
+    .db-status.error {
+
+        display: block;
+
+        background: rgba(239, 68, 68, 0.10);
+        color: #ef4444;
+
+        border: 1px solid rgba(239, 68, 68, 0.18);
+    }
+
+
+    /* Separador */
+
+    .db-divider {
+        height: 1px;
+
+        background: rgba(255, 255, 255, 0.07);
+
+        margin: 20px 0;
+    }
+
+
+    /* Responsive */
+
+    @media (max-width: 500px) {
+
+        .db-modal-content {
+            padding: 20px;
+        }
+
+        .db-fields-row {
+            grid-template-columns: 1fr;
+        }
+
+    }
+</style>
+
+<style>
+    /* ============================
+   MODAL DE CONEXIONES
+============================ */
+
+    [hidden] {
+        display: none !important;
+    }
+
+    .modal-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 2000;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        padding: 20px;
+        background: rgba(0, 0, 0, .68);
+        backdrop-filter: blur(4px);
+    }
+
+    .modal-conexiones {
+        width: 100%;
+        max-width: 760px;
+        max-height: 85vh;
+
+        display: flex;
+        flex-direction: column;
+
+        background: var(--bg);
+        color: var(--text);
+        border: 1px solid var(--sidebar-border);
+        border-radius: 16px;
+        box-shadow: 0 24px 80px rgba(0, 0, 0, .35);
+        overflow: hidden;
+    }
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+
+        padding: 22px 24px;
+        border-bottom: 1px solid var(--sidebar-border);
+    }
+
+    .modal-title {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .modal-title>span {
+        color: var(--accent);
+        font-size: 30px;
+    }
+
+    .modal-title h2 {
+        font-size: 19px;
+        font-weight: 600;
+    }
+
+    .modal-title p {
+        margin-top: 5px;
+        font-size: 12px;
+        color: var(--text-secondary);
+    }
+
+    .conexion-activa-panel {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+
+        margin: 20px 24px;
+        padding: 16px;
+
+        border: 1px solid rgba(16, 163, 127, .4);
+        border-radius: 12px;
+        background: rgba(16, 163, 127, .07);
+    }
+
+    .conexion-activa-icono {
+        width: 44px;
+        height: 44px;
+        flex-shrink: 0;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        background: rgba(16, 163, 127, .14);
+        color: var(--accent);
+        border-radius: 10px;
+    }
+
+    .conexion-activa-info {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        min-width: 0;
+        flex: 1;
+    }
+
+    .conexion-etiqueta {
+        color: var(--accent);
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: .8px;
+    }
+
+    .conexion-activa-info strong {
+        font-size: 14px;
+        overflow-wrap: anywhere;
+    }
+
+    .conexion-activa-info small {
+        color: var(--text-secondary);
+        font-size: 12px;
+    }
+
+    .estado-conexion {
+        color: var(--text-secondary);
+        font-size: 11px;
+        white-space: nowrap;
+    }
+
+    .estado-conexion.activa {
+        color: var(--accent);
+    }
+
+    .conexiones-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+
+        padding: 0 24px 16px;
+    }
+
+    .conexiones-busqueda {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        flex: 1;
+        max-width: 340px;
+        padding: 0 12px;
+
+        border: 1px solid var(--sidebar-border);
+        border-radius: 9px;
+        color: var(--text-secondary);
+    }
+
+    .conexiones-busqueda input {
+        width: 100%;
+        height: 40px;
+
+        border: none;
+        outline: none;
+        background: transparent;
+        color: var(--text);
+        font: inherit;
+        font-size: 12px;
+    }
+
+    .btn-primary,
+    .btn-secondary,
+    .btn-usar-conexion {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+
+        padding: 10px 13px;
+        border-radius: 9px;
+        font-family: inherit;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: .2s;
+    }
+
+    .btn-primary {
+        background: var(--accent);
+        color: white;
+        border: 1px solid var(--accent);
+    }
+
+    .btn-primary:hover {
+        filter: brightness(1.1);
+    }
+
+    .btn-secondary {
+        color: var(--text);
+        background: transparent;
+        border: 1px solid var(--sidebar-border);
+    }
+
+    .btn-secondary:hover {
+        background: var(--sidebar-hover);
+    }
+
+    .lista-conexiones {
+        flex: 1;
+        min-height: 100px;
+        overflow-y: auto;
+        padding: 0 24px 16px;
+    }
+
+    .conexion-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        padding: 15px;
+        margin-bottom: 10px;
+
+        border: 1px solid var(--sidebar-border);
+        border-radius: 11px;
+        background: var(--card);
+        transition: border-color .2s;
+    }
+
+    .conexion-item.seleccionada {
+        border-color: var(--accent);
+    }
+
+    .conexion-icono {
+        width: 40px;
+        height: 40px;
+        flex-shrink: 0;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 9px;
+        background: var(--sidebar-hover);
+        color: var(--text-secondary);
+    }
+
+    .conexion-detalles {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .conexion-detalles h3 {
+        font-size: 13px;
+        font-weight: 600;
+        overflow-wrap: anywhere;
+    }
+
+    .conexion-detalles p {
+        margin-top: 5px;
+        font-size: 11px;
+        color: var(--text-secondary);
+        overflow-wrap: anywhere;
+    }
+
+    .conexion-badges {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
+        margin-top: 8px;
+    }
+
+    .conexion-badge {
+        padding: 4px 7px;
+        border-radius: 5px;
+        background: var(--sidebar-hover);
+        color: var(--text-secondary);
+        font-size: 10px;
+    }
+
+    .conexion-badge.activa {
+        background: rgba(16, 163, 127, .13);
+        color: var(--accent);
+    }
+
+    .btn-usar-conexion {
+        flex-shrink: 0;
+        color: var(--text);
+        background: transparent;
+        border: 1px solid var(--sidebar-border);
+    }
+
+    .conexion-item.seleccionada .btn-usar-conexion {
+        color: var(--accent);
+        border-color: var(--accent);
+    }
+
+    .btn-usar-conexion:disabled {
+        opacity: .75;
+        cursor: default;
+    }
+
+    .conexiones-vacio {
+        padding: 35px 10px;
+        text-align: center;
+        color: var(--text-secondary);
+    }
+
+    .conexiones-vacio .material-symbols-outlined {
+        font-size: 34px;
+        margin-bottom: 10px;
+    }
+
+    .conexiones-vacio p {
+        font-size: 12px;
+    }
+
+    .mensaje-conexiones {
+        margin: 0 24px 12px;
+        padding: 10px 12px;
+        border-radius: 8px;
+        background: var(--sidebar-hover);
+        font-size: 12px;
+    }
+
+    .modal-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        padding: 16px 24px;
+        border-top: 1px solid var(--sidebar-border);
+        color: var(--text-secondary);
+        font-size: 11px;
+    }
+
+    body.modal-abierto {
+        overflow: hidden;
+    }
+
+    @media(max-width: 600px) {
+        .modal-overlay {
+            padding: 10px;
+        }
+
+        .modal-conexiones {
+            max-height: 92vh;
+        }
+
+        .modal-header,
+        .modal-footer {
+            padding: 16px;
+        }
+
+        .conexiones-toolbar {
+            align-items: stretch;
+            flex-direction: column;
+            padding: 0 16px 14px;
+        }
+
+        .conexiones-busqueda {
+            max-width: none;
+        }
+
+        .lista-conexiones {
+            padding: 0 16px 12px;
+        }
+
+        .conexion-activa-panel {
+            margin: 16px;
+        }
+
+        .conexion-item {
+            flex-wrap: wrap;
+        }
+
+        .btn-usar-conexion {
+            margin-left: auto;
+        }
+    }
+</style>
+
+<style>
+    .chat-input-wrapper {
+        position: relative;
+    }
+
+    .tabla-suggestions {
+        position: absolute;
+        bottom: calc(100% + 8px);
+        left: 0;
+        width: 100%;
+        max-height: 250px;
+        overflow-y: auto;
+        box-sizing: border-box;
+        padding: 6px;
+        border: 1px solid var(--border-color, #d1d5db);
+        border-radius: 12px;
+        background: #0d0f1c;
+        box-shadow: 0 8px 24px rgb(0 0 0 / 14%);
+        z-index: 1000;
+    }
+
+    .tabla-suggestions.hidden {
+        display: none;
+    }
+
+    .tabla-suggestion {
+        display: block;
+        width: 100%;
+        padding: 10px 12px;
+        border: none;
+        border-radius: 7px;
+        background: transparent;
+        color: white;
+        text-align: left;
+        overflow-wrap: anywhere;
+        cursor: pointer;
+    }
+
+    .tabla-suggestion:hover,
+    .tabla-suggestion.selected {
+        background: var(--hover-bg, #211a41);
+    }
+</style>
+
+<style>
+    /* ==========================
+   TÍTULO ANIMADO ANALYTIX
+========================== */
+
+    .welcome h1 {
+        position: relative;
+        margin-bottom: 12px;
+
+        font-size: clamp(42px, 5vw, 58px);
+        font-weight: 800;
+        letter-spacing: -2px;
+        line-height: 1.15;
+
+        /* Degradado tecnológico */
+        background: linear-gradient(110deg,
+                #38bdf8 0%,
+                #6366f1 35%,
+                #a78bfa 60%,
+                #38bdf8 100%);
+
+        background-size: 250% auto;
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+
+        /* Animaciones */
+        animation:
+            analytixEntrada 0.9s ease-out both,
+            analytixBrillo 6s ease-in-out 0.9s infinite;
+
+        /* Sombra sutil */
+        filter: drop-shadow(0 0 18px rgba(99, 102, 241, 0.18));
+    }
+
+    /* Entrada suave desde abajo */
+    @keyframes analytixEntrada {
+        from {
+            opacity: 0;
+            transform: translateY(18px) scale(0.96);
+            filter: blur(6px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            filter: blur(0);
+        }
+    }
+
+    /* Movimiento lento del degradado */
+    @keyframes analytixBrillo {
+
+        0%,
+        100% {
+            background-position: 0% center;
+        }
+
+        50% {
+            background-position: 100% center;
+        }
+    }
+
+    /* Compatibilidad con usuarios que reducen animaciones */
+    @media (prefers-reduced-motion: reduce) {
+        .welcome h1 {
+            animation: none;
+            background-position: center;
+            filter: none;
+        }
+    }
+</style>
+
+<style>
+    .welcome-subtitle {
+        margin-top: 4px;
+        color: var(--text-secondary);
+        font-size: 15px;
+        letter-spacing: 0.3px;
+        opacity: 0;
+        animation: subtituloEntrada 0.7s ease-out 0.4s forwards;
+    }
+
+    @keyframes subtituloEntrada {
+        from {
+            opacity: 0;
+            transform: translateY(8px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<style>
+    .welcome-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 20px;
 }
 
+.welcome-logo {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: transparent;
+    filter: drop-shadow(0 0 18px rgba(70, 130, 255, 0.25));
+}
 </style>
 
 {% endblock %}
 
 {% block content %}
 
+<!-- MODAL: ADMINISTRAR CONEXIONES -->
+<div class="modal-overlay" id="modalAdministrarConexiones" hidden>
+    <section class="modal-conexiones" role="dialog" aria-modal="true" aria-labelledby="tituloAdministrarConexiones">
+
+        <header class="modal-header">
+            <div class="modal-title">
+                <span class="material-symbols-outlined">database</span>
+                <div>
+                    <h2 id="tituloAdministrarConexiones">Conexiones</h2>
+                    <p>Administra y selecciona la base de datos del proyecto.</p>
+                </div>
+            </div>
+
+            <button type="button" class="icon-btn" id="cerrarAdministrarConexiones" aria-label="Cerrar modal">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </header>
+
+        <div class="conexion-activa-panel">
+            <div class="conexion-activa-icono">
+                <span class="material-symbols-outlined">database</span>
+            </div>
+
+            <div class="conexion-activa-info">
+                <span class="conexion-etiqueta">CONEXIÓN ACTIVA</span>
+                <strong id="nombreConexionActiva">Ninguna seleccionada</strong>
+                <small id="detalleConexionActiva">
+                    Selecciona una conexión para comenzar.
+                </small>
+            </div>
+
+            <span class="estado-conexion" id="estadoConexionActiva">
+                Sin conexión
+            </span>
+        </div>
+
+        <div class="conexiones-toolbar">
+            <div class="conexiones-busqueda">
+                <span class="material-symbols-outlined">search</span>
+                <input type="search" id="buscarConexion" placeholder="Buscar conexión...">
+            </div>
+
+            <button type="button" class="btn-primary" id="btnNuevaConexion">
+                <span class="material-symbols-outlined">add</span>
+                Nueva conexión
+            </button>
+        </div>
+
+        <div id="mensajeConexiones" class="mensaje-conexiones" hidden></div>
+
+        <div class="lista-conexiones" id="listaConexiones">
+            <div class="conexiones-vacio">
+                <span class="material-symbols-outlined">database</span>
+                <p>Cargando conexiones...</p>
+            </div>
+        </div>
+
+        <footer class="modal-footer">
+            <span id="contadorConexiones">0 conexiones</span>
+
+            <button type="button" class="btn-secondary" id="cancelarAdministrarConexiones">
+                Cerrar
+            </button>
+        </footer>
+
+    </section>
+</div>
+
+<!--Chat Agent-->
 <div class="chat-page">
 
 
-<div class="chat-box" id="chatBox">
+    <div class="chat-box" id="chatBox">
 
-    <div class="welcome" id="welcome">
+        <div class="welcome" id="welcome">
+            <div class="welcome-icon">
+                <img src="{% static 'images/4.png' %}" alt="Logo de AnalytiX" class="welcome-logo">
+            </div>
+            <h1>AnalytiX</h1>
 
-        <div class="welcome-icon">
 
-            <span class="material-symbols-outlined">
-                auto_awesome
-            </span>
+            <p class="welcome-subtitle">
+                Transformando datos en conocimiento y progreso para la humanidad.
+            </p>
+
+
 
         </div>
 
-        <h1>AnalytiX</h1>
-
-        <p>
-            Consulta empleados, turnos, horas extras,
-            nómina y reportes utilizando lenguaje natural.
-        </p>
+        <div class="messages-container" id="messagesContainer">
+        </div>
 
     </div>
 
-    <div class="messages-container"
-         id="messagesContainer">
+
+    <div class="chat-footer">
+
+        <div class="chat-input-wrapper">
+
+            <!-- Sugerencias de tablas -->
+            <div id="tablaSuggestions" class="tabla-suggestions hidden"></div>
+
+            <div class="chat-input-container">
+
+                <textarea id="chatInput" class="chat-input" rows="1"
+                    placeholder="Pregunta algo... Usa @ para mencionar tablas"></textarea>
+
+                <button id="btnEnviarPrompt" class="send-btn">
+                    <span class="material-symbols-outlined">
+                        arrow_upward
+                    </span>
+                </button>
+
+            </div>
+
+        </div>
+
     </div>
+
 
 </div>
 
-<div class="chat-footer">
+<!-- ==========================================
+     MODAL CONEXIÓN BASE DE DATOS
+=========================================== -->
 
-    <div class="chat-input-wrapper">
+<div id="dbModal" class="db-modal">
 
-        <div class="chat-input-container">
+    <div class="db-modal-content">
 
-            <textarea
-                id="chatInput"
-                class="chat-input"
-                rows="1"
-                placeholder="Pregunta algo..."
-            ></textarea>
+        <!-- Header -->
 
-            <button
-                id="btnEnviarPrompt"
-                class="send-btn">
+        <div class="db-modal-header">
+
+            <div class="db-modal-title">
+
+                <div class="db-modal-title-icon">
+                    <span class="material-symbols-outlined">
+                        database
+                    </span>
+                </div>
+
+                <div>
+                    <h2>Conectar base de datos</h2>
+
+                    <p>
+                        Configura la fuente de datos para AnalytiX
+                    </p>
+                </div>
+
+            </div>
+
+
+            <button type="button" id="btnCerrarConexion" class="db-close">
 
                 <span class="material-symbols-outlined">
-                    arrow_upward
+                    close
                 </span>
 
             </button>
 
         </div>
 
+
+        <!-- Motor -->
+
+        <div class="db-field">
+
+            <label for="dbMotor">
+                Motor de base de datos
+            </label>
+
+            <select id="dbMotor">
+
+                <option value="postgresql">
+                    PostgreSQL
+                </option>
+
+                <option value="mysql" disabled>
+                    MySQL — próximamente
+                </option>
+
+                <option value="sqlserver" disabled>
+                    SQL Server — próximamente
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- Host + Puerto -->
+
+        <div class="db-fields-row">
+
+            <div class="db-field">
+
+                <label for="dbHost">
+                    Host
+                </label>
+
+                <input id="dbHost" type="text" value="localhost" placeholder="localhost">
+
+            </div>
+
+
+            <div class="db-field">
+
+                <label for="dbPort">
+                    Puerto
+                </label>
+
+                <input id="dbPort" type="number" value="5432" placeholder="5432">
+
+            </div>
+
+        </div>
+
+
+        <!-- Base de datos -->
+
+        <div class="db-field">
+
+            <label for="dbDatabase">
+                Base de datos
+            </label>
+
+            <input id="dbDatabase" type="text" placeholder="Nombre de la base de datos">
+
+        </div>
+
+
+        <!-- Usuario -->
+
+        <div class="db-field">
+
+            <label for="dbUser">
+                Usuario
+            </label>
+
+            <input id="dbUser" type="text" placeholder="Usuario" autocomplete="off">
+
+        </div>
+
+
+        <!-- Contraseña -->
+
+        <div class="db-field">
+
+            <label for="dbPassword">
+                Contraseña
+            </label>
+
+            <input id="dbPassword" type="password" placeholder="Contraseña" autocomplete="new-password">
+
+        </div>
+
+
+        <div class="db-divider"></div>
+
+
+        <!-- Botón -->
+
+        <button type="button" id="btnProbarConexion" class="db-connect-btn">
+
+            <span class="material-symbols-outlined">
+                cable
+            </span>
+
+            Probar conexión
+
+        </button>
+
+
+        <!-- Estado -->
+
+        <div id="dbStatus" class="db-status"></div>
+
     </div>
 
 </div>
 
+<!-- ==========================================
+     MODAL CONEXIÓN BASE DE DATOS
+=========================================== -->
 
-</div>
+
+
 
 {% endblock %}
 
@@ -342,105 +1399,683 @@
 
 <script>
 
-const chatBox =
-    document.getElementById("chatBox");
+    const chatBox =
+        document.getElementById("chatBox");
 
-const messagesContainer =
-    document.getElementById("messagesContainer");
+    const messagesContainer =
+        document.getElementById("messagesContainer");
 
-const welcome =
-    document.getElementById("welcome");
+    const welcome =
+        document.getElementById("welcome");
 
-const input =
-    document.getElementById("chatInput");
+    const input =
+        document.getElementById("chatInput");
 
-const btn =
-    document.getElementById("btnEnviarPrompt");
+    const btn =
+        document.getElementById("btnEnviarPrompt");
 
-/* AUTO RESIZE */
+    let tablasDisponibles = []
 
-input.addEventListener("input",()=>{
+    /* AUTO RESIZE */
 
-    input.style.height = "auto";
+    input.addEventListener("input", () => {
 
-    input.style.height =
-        input.scrollHeight + "px";
+        input.style.height = "auto";
 
-});
+        input.style.height =
+            input.scrollHeight + "px";
 
-/* MENSAJES */
+    });
 
-function agregarMensaje(texto,tipo){
+    /* MENSAJES */
 
-    welcome.style.display="none";
+    function agregarMensaje(texto, tipo) {
 
-    const row =
-        document.createElement("div");
+        welcome.style.display = "none";
 
-    row.className =
-        `message-row ${tipo}`;
+        const row =
+            document.createElement("div");
 
-    const bubble =
-        document.createElement("div");
+        row.className =
+            `message-row ${tipo}`;
 
-    bubble.className =
-        "message";
+        const bubble =
+            document.createElement("div");
 
-    bubble.innerText =
-        texto;
+        bubble.className =
+            "message";
 
-    row.appendChild(bubble);
+        bubble.innerText =
+            texto;
 
-    messagesContainer.appendChild(row);
+        row.appendChild(bubble);
 
-    chatBox.scrollTop =
-        chatBox.scrollHeight;
-}
+        messagesContainer.appendChild(row);
 
-function enviarMensaje(){
+        chatBox.scrollTop =
+            chatBox.scrollHeight;
+    }
 
-    const texto =
-        input.value.trim();
+    async function enviarMensaje() {
 
-    if(!texto) return;
+        const texto = input.value.trim();
 
-    agregarMensaje(texto,"user");
+        if (!texto) return;
+        const tablasUsadas = obtenerTablasUsadas(texto);
+        agregarMensaje(texto, "user");
 
-    input.value="";
-    input.style.height="24px";
+        input.value = "";
+        input.style.height = "24px";
 
-    setTimeout(()=>{
+        // Mensaje temporal
+        const loadingRow = document.createElement("div");
+        loadingRow.className = "message-row bot";
+        loadingRow.id = "loadingMessage";
 
-        agregarMensaje(
-            "Estoy procesando tu consulta con Qwen 3...",
-            "bot"
-        );
+        const loadingBubble = document.createElement("div");
+        loadingBubble.className = "message typing";
 
-    },700);
-}
+        loadingBubble.innerHTML = `
+        <span></span>
+        <span></span>
+        <span></span>
+    `;
 
-/* EVENTOS */
+        loadingRow.appendChild(loadingBubble);
+        messagesContainer.appendChild(loadingRow);
 
-btn.addEventListener(
-    "click",
-    enviarMensaje
-);
+        chatBox.scrollTop = chatBox.scrollHeight;
 
-input.addEventListener(
-    "keydown",
-    function(e){
+        try {
 
-        if(
-            e.key==="Enter" &&
-            !e.shiftKey
-        ){
+            const response = await fetch(
+                "{% url 'ai_query' %}",
+                {
+                    method: "POST",
 
-            e.preventDefault();
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": getCookie("csrftoken")
+                    },
 
-            enviarMensaje();
+                    body: JSON.stringify({
+                        pregunta: texto,
+                        schema: tablasDisponibles,
+                        tablasUsadas: tablasUsadas
+                    })
+                }
+            );
+
+            const data = await response.json();
+
+            // eliminar loading
+            loadingRow.remove();
+
+            if (!response.ok) {
+
+                agregarMensaje(
+                    data.error || "Ocurrió un error.",
+                    "bot"
+                );
+
+                return;
+            }
+
+            agregarMensaje(
+                data.respuesta,
+                "bot"
+            );
+
+        } catch (error) {
+
+            loadingRow.remove();
+
+            console.error(error);
+
+            agregarMensaje(
+                "No fue posible conectar con Analytix.",
+                "bot"
+            );
         }
     }
-);
+
+    /* EVENTOS */
+
+    btn.addEventListener(
+        "click",
+        enviarMensaje
+    );
+
+
+
+    function getCookie(name) {
+
+        let cookieValue = null;
+
+        if (document.cookie && document.cookie !== "") {
+
+            const cookies =
+                document.cookie.split(";");
+
+            for (let cookie of cookies) {
+
+                cookie = cookie.trim();
+
+                if (cookie.startsWith(name + "=")) {
+
+                    cookieValue =
+                        decodeURIComponent(
+                            cookie.substring(
+                                name.length + 1
+                            )
+                        );
+
+                    break;
+                }
+            }
+        }
+
+        return cookieValue;
+    }
+
+    const btnProbarConexion = document.getElementById("btnProbarConexion");
+    const dbStatus = document.getElementById("dbStatus");
+
+    btnProbarConexion.addEventListener("click", async () => {
+        const datosConexion = {
+            motor: document.getElementById("dbMotor").value,
+            host: document.getElementById("dbHost").value.trim(),
+            port: document.getElementById("dbPort").value,
+            database: document.getElementById("dbDatabase").value.trim(),
+            user: document.getElementById("dbUser").value.trim(),
+            password: document.getElementById("dbPassword").value
+        };
+
+        btnProbarConexion.disabled = true;
+        dbStatus.className = "db-status";
+        dbStatus.textContent = "Probando conexión...";
+
+        try {
+            const response = await fetch(
+                "{% url 'conectar_bd' %}",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": getCookie("csrftoken")
+                    },
+                    body: JSON.stringify(datosConexion)
+                }
+            );
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || "No fue posible conectar con la base de datos.");
+            }
+
+            dbStatus.className = "db-status success";
+            dbStatus.textContent = `${data.mensaje} ${data.id_conexion}` || "Conexión establecida correctamente.";
+
+        } catch (error) {
+            console.error("Error al conectar la base de datos:", error);
+
+            dbStatus.className = "db-status error";
+            dbStatus.textContent = error.message || "Error al conectar con la base de datos.";
+
+        } finally {
+            btnProbarConexion.disabled = false;
+        }
+    });
+
+    const btnBasesDatos = document.getElementById("btnBasesDatos");
+    const dbModal = document.getElementById("dbModal");
+
+    if (btnBasesDatos && dbModal) {
+
+        btnBasesDatos.addEventListener("click", (e) => {
+            e.preventDefault();
+            dbModal.classList.add("active");
+        });
+
+    }
+
+    const btnCerrarConexion =
+        document.getElementById("btnCerrarConexion");
+
+    if (btnCerrarConexion) {
+        btnCerrarConexion.addEventListener("click", () => {
+            dbModal.classList.remove("active");
+        });
+    }
+
+
+
+
+    /*Funcionalidad del modal de administración de conexiones*/
+
+    const modalConexiones = document.getElementById(
+        "modalAdministrarConexiones"
+    );
+
+    const listaConexiones = document.getElementById("listaConexiones");
+    const buscarConexion = document.getElementById("buscarConexion");
+    const mensajeConexiones = document.getElementById("mensajeConexiones");
+
+    let conexiones = [];
+    let conexionActivaId = null;
+
+    function abrirModalConexiones() {
+        modalConexiones.hidden = false;
+        document.body.classList.add("modal-abierto");
+        cargarConexiones();
+    }
+
+    function cerrarModalConexiones() {
+        modalConexiones.hidden = true;
+        document.body.classList.remove("modal-abierto");
+    }
+
+    document.getElementById("btnAdministrarConexiones")
+        .addEventListener("click", event => {
+            event.preventDefault();
+            abrirModalConexiones();
+        });
+
+    document.getElementById("cerrarAdministrarConexiones")
+        .addEventListener("click", cerrarModalConexiones);
+
+    document.getElementById("cancelarAdministrarConexiones")
+        .addEventListener("click", cerrarModalConexiones);
+
+    modalConexiones.addEventListener("click", event => {
+        if (event.target === modalConexiones) {
+            cerrarModalConexiones();
+        }
+    });
+
+    document.getElementById("btnNuevaConexion")
+        .addEventListener("click", () => {
+            // Reutiliza el modal de registro que ya creaste.
+            document.getElementById("btnBasesDatos").click();
+        });
+
+    buscarConexion.addEventListener("input", () => {
+        renderizarConexiones(buscarConexion.value);
+    });
+
+    function mostrarMensaje(texto) {
+        mensajeConexiones.textContent = texto;
+        mensajeConexiones.hidden = false;
+    }
+
+    function ocultarMensaje() {
+        mensajeConexiones.hidden = true;
+        mensajeConexiones.textContent = "";
+    }
+
+
+    async function cargarConexiones() {
+        listaConexiones.innerHTML = `
+        <div class="conexiones-vacio">
+            <p>Cargando conexiones...</p>
+        </div>
+    `;
+
+        ocultarMensaje();
+
+        try {
+            const response = await fetch("{% url 'listar_bd' %}", {
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest"
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error("No se pudieron consultar las conexiones.");
+            }
+
+            const data = await response.json();
+            conexiones = data.conexiones || [];
+
+            // Identificar la conexión activa según su estado.
+            const activa = conexiones.find(c => c.estado === true);
+
+            conexionActivaId = activa ? activa.id : null;
+
+            actualizarConexionActiva();
+            renderizarConexiones(buscarConexion.value);
+
+        } catch (error) {
+            listaConexiones.innerHTML = "";
+            mostrarMensaje(error.message);
+        }
+    }
+
+
+    function actualizarConexionActiva() {
+        const activa = conexiones.find(c => c.estado === true);
+
+        document.getElementById("nombreConexionActiva").textContent =
+            activa ? activa.nombre : "Ninguna seleccionada";
+
+        document.getElementById("detalleConexionActiva").textContent =
+            activa
+                ? `${activa.motor || "Motor no especificado"} · ${activa.host}:${activa.puerto}`
+                : "Selecciona una conexión para comenzar.";
+
+        const estado = document.getElementById("estadoConexionActiva");
+
+        estado.textContent = activa ? "Activa" : "Sin conexión";
+        estado.classList.toggle("activa", Boolean(activa));
+
+        conexionActivaId = activa ? activa.id : null;
+    }
+
+    function renderizarConexiones(filtro = "") {
+        const termino = filtro.trim().toLowerCase();
+
+        const filtradas = conexiones.filter(conexion =>
+            `${conexion.nombre} ${conexion.motor} ${conexion.host}`
+                .toLowerCase()
+                .includes(termino)
+        );
+
+        document.getElementById("contadorConexiones").textContent =
+            `${conexiones.length} conexión${conexiones.length !== 1 ? "es" : ""}`;
+
+        if (!filtradas.length) {
+            listaConexiones.innerHTML = `
+            <div class="conexiones-vacio">
+                <span class="material-symbols-outlined">database_off</span>
+                <p>No se encontraron conexiones.</p>
+            </div>
+        `;
+            return;
+        }
+
+        listaConexiones.innerHTML = filtradas.map(conexion => {
+            const activa = conexion.estado === true;
+
+            return `
+            <article class="conexion-item ${activa ? "seleccionada" : ""}">
+                <div class="conexion-icono">
+                    <span class="material-symbols-outlined">database</span>
+                </div>
+
+                <div class="conexion-detalles">
+                    <h3>${escaparHTML(conexion.nombre)}</h3>
+                    <p>${escaparHTML(conexion.host)}:${escaparHTML(conexion.puerto)}</p>
+
+                    <div class="conexion-badges">
+                        <span class="conexion-badge">
+                            ${escaparHTML(conexion.motor)}
+                        </span>
+                        ${activa
+                    ? '<span class="conexion-badge activa">En uso</span>'
+                    : ''}
+                    </div>
+                    ${conexion.estado
+                    ? '<span class="conexion-badge activa">Activa</span>'
+                    : '<span class="conexion-badge">Inactiva</span>'}
+                </div>
+
+                
+                <button type="button"
+                    class="btn-usar-conexion"
+                    data-conexion-id="${escaparHTML(conexion.id)}"
+                    data-accion="${conexion.estado ? "desactivar" : "activar"}">
+
+                    <span class="material-symbols-outlined">
+                        ${conexion.estado ? "power_settings_new" : "play_arrow"}
+                    </span>
+
+                    ${conexion.estado ? "Desactivar" : "Seleccionar"}
+                </button>
+            </article>
+        `;
+        }).join("");
+    }
+
+    function escaparHTML(valor) {
+        return String(valor ?? "").replace(/[&<>"']/g, caracter => ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;"
+        })[caracter]);
+    }
+
+
+    listaConexiones.addEventListener("click", async event => {
+        const boton = event.target.closest("[data-conexion-id]");
+
+        if (!boton || boton.disabled) return;
+
+        const id = boton.dataset.conexionId;
+        const accion = boton.dataset.accion;
+
+        const url = accion === "desactivar"
+            ? `synergy/controller_cnx/?id=${encodeURIComponent(id)}&accion=${encodeURIComponent("desactivar")}`
+            : `synergy/controller_cnx/?id=${encodeURIComponent(id)}&accion=${encodeURIComponent("activar")}`;
+
+        boton.disabled = true;
+        boton.style.cursor = "default";
+        console.log(url)
+        try {
+            const response = await fetch(url, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": obtenerCSRFToken(),
+                    "X-Requested-With": "XMLHttpRequest"
+                }
+
+            });
+
+            const data = await response.json();
+
+            if (!response.ok || !data.ok) {
+                throw new Error(
+                    data.mensaje || "No se pudo actualizar la conexión."
+                );
+            }
+
+            if (data.ok) {
+                actualizarTablasDisponibles(data.schema);
+                console.log("Tablas disponibles:", tablasDisponibles);
+            }
+
+            // Volver a consultar el estado real guardado en Django.
+            await cargarConexiones();
+
+            mostrarMensaje(
+                accion === "desactivar"
+                    ? "Conexión desactivada correctamente."
+                    : "Conexión seleccionada correctamente."
+            );
+
+        } catch (error) {
+            mostrarMensaje(error.message);
+        } finally {
+            // Si el botón todavía existe en el DOM, liberarlo.
+            if (boton.isConnected) {
+                boton.disabled = false;
+            }
+        }
+    });
+
+    function obtenerCSRFToken() {
+        const cookie = document.cookie
+            .split("; ")
+            .find(fila => fila.startsWith("csrftoken="));
+
+        return cookie ? decodeURIComponent(cookie.split("=")[1]) : "";
+    }
+
+
+
+
+    // Llama esta función cuando recibas la respuesta de activación.
+    function actualizarTablasDisponibles(schema) {
+        tablasDisponibles = Array.isArray(schema) ? schema : [];
+    }
+
+    const chatInput = document.getElementById("chatInput");
+    const tablaSuggestions = document.getElementById("tablaSuggestions");
+
+    let tablasFiltradas = [];
+    let indiceTablaSeleccionada = 0;
+    let rangoMencion = null;
+
+    function ocultarTablas() {
+        tablaSuggestions.classList.add("hidden");
+        tablaSuggestions.replaceChildren();
+        tablasFiltradas = [];
+        rangoMencion = null;
+    }
+
+    function detectarMencionTabla() {
+        const texto = chatInput.value;
+        const cursor = chatInput.selectionStart;
+        const textoAntes = texto.slice(0, cursor);
+
+        // Detecta @ y el nombre parcial de la tabla.
+        const coincidencia = textoAntes.match(/@([a-zA-Z0-9_]*)$/);
+
+        if (!coincidencia || tablasDisponibles.length === 0) {
+            ocultarTablas();
+            return;
+        }
+
+        const termino = coincidencia[1].toLowerCase();
+
+        tablasFiltradas = tablasDisponibles
+            .filter(nombre => nombre.toLowerCase().includes(termino))
+        /*.slice(0, 10);*/
+
+        if (tablasFiltradas.length === 0) {
+            ocultarTablas();
+            return;
+        }
+
+        rangoMencion = {
+            inicio: cursor - coincidencia[0].length,
+            fin: cursor
+        };
+
+        indiceTablaSeleccionada = 0;
+        tablaSuggestions.replaceChildren();
+
+        tablasFiltradas.forEach((nombre, indice) => {
+            const opcion = document.createElement("button");
+
+            opcion.type = "button";
+            opcion.className = "tabla-suggestion";
+            opcion.textContent = nombre;
+            opcion.setAttribute("role", "option");
+
+            if (indice === 0) {
+                opcion.classList.add("selected");
+            }
+
+            // mousedown evita perder el foco del textarea antes de insertar.
+            opcion.addEventListener("mousedown", evento => {
+                evento.preventDefault();
+                insertarTabla(nombre);
+            });
+
+            tablaSuggestions.appendChild(opcion);
+        });
+
+        tablaSuggestions.classList.remove("hidden");
+    }
+
+    function insertarTabla(nombre) {
+        if (!rangoMencion) return;
+
+        const texto = chatInput.value;
+        const { inicio, fin } = rangoMencion;
+
+        const mencion = "@" + nombre;
+
+        chatInput.value =
+            texto.slice(0, inicio) +
+            mencion +
+            texto.slice(fin);
+
+        const posicion = inicio + mencion.length;
+
+        chatInput.focus();
+        chatInput.setSelectionRange(posicion, posicion);
+
+        ocultarTablas();
+    }
+
+    function actualizarSeleccionTabla() {
+        const opciones = tablaSuggestions.querySelectorAll(
+            ".tabla-suggestion"
+        );
+
+        opciones.forEach((opcion, indice) => {
+            opcion.classList.toggle(
+                "selected",
+                indice === indiceTablaSeleccionada
+            );
+        });
+    }
+
+    chatInput.addEventListener("input", detectarMencionTabla);
+    chatInput.addEventListener("click", detectarMencionTabla);
+
+    chatInput.addEventListener("keydown", evento => {
+        if (tablaSuggestions.classList.contains("hidden")) return;
+
+        if (evento.key === "ArrowDown") {
+            evento.preventDefault();
+
+            indiceTablaSeleccionada =
+                (indiceTablaSeleccionada + 1) % tablasFiltradas.length;
+
+            actualizarSeleccionTabla();
+
+        } else if (evento.key === "ArrowUp") {
+            evento.preventDefault();
+
+            indiceTablaSeleccionada =
+                (indiceTablaSeleccionada - 1 + tablasFiltradas.length) %
+                tablasFiltradas.length;
+
+            actualizarSeleccionTabla();
+
+        } else if (evento.key === "Enter" && !evento.shiftKey) {
+            evento.preventDefault();
+
+            if (tablasFiltradas.length > 0) {
+                insertarTabla(tablasFiltradas[indiceTablaSeleccionada]);
+            }
+
+        } else if (evento.key === "Escape") {
+            ocultarTablas();
+        }
+    });
+
+
+
+    function obtenerTablasUsadas(pregunta) {
+        const menciones = pregunta.match(/@([a-zA-Z0-9_]+)/g) || [];
+
+        // Quitar @ y eliminar nombres duplicados.
+        const tablasMencionadas = [...new Set(
+            menciones.map(nombre => nombre.substring(1))
+        )];
+
+        // Validar que las tablas existan entre las disponibles.
+        return tablasMencionadas.filter(nombre =>
+            tablasDisponibles.includes(nombre)
+        );
+    }
 
 </script>
 

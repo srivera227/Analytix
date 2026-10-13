@@ -1,21 +1,20 @@
 
 
 :root{
-    --sidebar:#171717;
+    --sidebar:#000000;
     --sidebar-hover:#2a2a2a;
     --sidebar-border:#2f2f2f;
 
-    --bg:#212121;
+    --bg:#000000;
     --card:#2f2f2f;
 
     --text:#ececec;
-    --text-secondary:#a1a1aa;
+    --text-secondary:#ffffff;
 
     --accent:#10a37f;
 }
 
 body.light{
-
     --sidebar:#ffffff;
     --sidebar-hover:#f3f4f6;
     --sidebar-border:#e5e7eb;
@@ -119,13 +118,7 @@ body{
     height:34px;
 
     border-radius:10px;
-
-    background:linear-gradient(
-        135deg,
-        #162ea8,
-        #071820
-    );
-
+    background-color: #000000;
     display:flex;
     align-items:center;
     justify-content:center;
@@ -175,7 +168,7 @@ body{
     align-items:center;
     gap:10px;
 
-    padding:0 12px;
+    padding:0 8px;
 }
 
 /* NAV */

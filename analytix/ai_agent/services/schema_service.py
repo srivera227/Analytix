@@ -1,34 +1,74 @@
-from django.db import connection
+import psycopg
+
+
+DB_CONFIG = {
+    "host": "localhost",
+    "port": 5432,
+    "dbname": "gt_conduccion",
+    "user": "postgres",
+    "password": "Zqwert178945.",
+}
 
 
 def obtener_schema():
 
-    sql = """
-    SELECT
-        table_name,
-        column_name,
-        data_type
-    FROM information_schema.columns
-    WHERE table_schema = 'public'
-    ORDER BY table_name
+    query = """
+        SELECT
+            c.table_name,
+            c.column_name,
+            c.data_type,
+
+            EXISTS (
+                SELECT 1
+                FROM information_schema.table_constraints tc
+                JOIN information_schema.key_column_usage kcu
+                    ON tc.constraint_name = kcu.constraint_name
+                    AND tc.table_schema = kcu.table_schema
+                    AND tc.table_name = kcu.table_name
+                WHERE tc.constraint_type = 'PRIMARY KEY'
+                    AND kcu.table_schema = c.table_schema
+                    AND kcu.table_name = c.table_name
+                    AND kcu.column_name = c.column_name
+            ) AS es_pk,
+
+            EXISTS (
+                SELECT 1
+                FROM information_schema.table_constraints tc
+                JOIN information_schema.key_column_usage kcu
+                    ON tc.constraint_name = kcu.constraint_name
+                    AND tc.table_schema = kcu.table_schema
+                    AND tc.table_name = kcu.table_name
+                WHERE tc.constraint_type = 'FOREIGN KEY'
+                    AND kcu.table_schema = c.table_schema
+                    AND kcu.table_name = c.table_name
+                    AND kcu.column_name = c.column_name
+            ) AS es_fk
+
+        FROM information_schema.columns c
+
+        WHERE c.table_schema = 'public'
+
+        ORDER BY
+            c.table_name,
+            c.ordinal_position;
     """
 
-    with connection.cursor() as cursor:
-
-        cursor.execute(sql)
-
-        rows = cursor.fetchall()
+    with psycopg.connect(**DB_CONFIG) as conn:
+        with conn.cursor() as cursor:
+            cursor.execute(query)
+            rows = cursor.fetchall()
 
     schema = {}
 
-    for table, column, dtype in rows:
+    for table, column, dtype, es_pk, es_fk in rows:
 
-        schema.setdefault(table, []).append(column)
+        schema.setdefault(table, []).append({
+            "table":table
+            #"column": column,
+            #"type": dtype,
+            #"es_pk": es_pk,
+            #"es_fk": es_fk,
+        })
 
-    texto = ""
 
-    for t, cols in schema.items():
-
-        texto += f"{t}({', '.join(cols)})\n"
-
-    return texto
+    return schema

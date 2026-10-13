@@ -3,202 +3,197 @@
 <!DOCTYPE html>
 
 <html lang="es">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>{% block title %}AnalytiX{% endblock %}</title>
+    <title>{% block title %}AnalytiX{% endblock %}</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
 
-<link rel="stylesheet" href="{% static 'styles.css' %}">
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
 
 
 
-{% block styles %}
+    {% block styles %}
 
-{% endblock %}
+    {% endblock %}
 
 </head>
 
 <body>
 
-<aside class="sidebar" id="sidebar">
+    <aside class="sidebar collapsed" id="sidebar">
 
 
-<div class="sidebar-top">
+        <div class="sidebar-top">
 
-    <div class="logo-row">
+            <div class="logo-row">
 
-        <div class="logo">
+                <div class="logo">
 
-            <div class="logo-icon" id= "toggleSidebar">
-                 <span class="material-symbols-outlined">
-                    auto_awesome
-                </span>
-            </div>
+                    <div class="logo-icon" id="toggleSidebar">
+                        <img src="{% static 'images/4.png' %}" alt="Logo de AnalytiX" class="welcome-logo">
+                    </div>
 
-            <span class="hide-collapse">
-                AnalityX
-            </span>
+                    <span class="hide-collapse">
+                        AnalityX
+                    </span>
 
-        </div>
+                </div>
 
-        <!-- <button id="toggleSidebar" class="icon-btn">
+                <!-- <button id="toggleSidebar" class="icon-btn">
             <span class="material-symbols-outlined">
                 menu
             </span>
         </button>
         -->
 
-    </div>
+            </div>
 
-    <button class="new-chat">
+            <button class="new-chat">
 
-        <span class="material-symbols-outlined">
-            edit_square
-        </span>
+                <span class="material-symbols-outlined">
+                    edit_square
+                </span>
 
-        <span class="hide-collapse">
-            Nuevo chat
-        </span>
+                <span class="hide-collapse">
+                    Nuevo chat
+                </span>
 
-    </button>
+            </button>
 
-</div>
-
-<div class="sidebar-nav">
-
-    <a href="#" class="nav-item active">
-        <span class="material-symbols-outlined">chat</span>
-        <span class="hide-collapse">Chats</span>
-    </a>
-
-    <a href="#" class="nav-item">
-        <span class="material-symbols-outlined">hub</span>
-        <span class="hide-collapse">Conexiones</span>
-    </a>
-
-    <a href="#" class="nav-item">
-        <span class="material-symbols-outlined">analytics</span>
-        <span class="hide-collapse">Logs</span>
-    </a>
-
-    <a href="#" class="nav-item">
-        <span class="material-symbols-outlined">database</span>
-        <span class="hide-collapse">Bases de datos</span>
-    </a>
-
-</div>
-
-<div class="user-info">
-
-    <div class="user-avatar">
-        {{ user.username|first|upper }}
-    </div>
-
-    <div class="hide-collapse">
-
-        <div style="font-size:14px;font-weight:600;">
-            {{ user.username }}
         </div>
 
-        <div style="font-size:12px;color:var(--text-secondary)">
-            Qwen3 Local
+        <div class="sidebar-nav">
+
+            <a href="#" class="nav-item">
+                <span class="material-symbols-outlined">chat</span>
+                <span class="hide-collapse">Chats</span>
+            </a>
+
+            <a href="#" class="nav-item" id="btnBasesDatos">
+                <span class="material-symbols-outlined">database</span>
+                <span class="hide-collapse">Bases de datos</span>
+            </a>
+
+            <a href="#" class="nav-item" id="btnAdministrarConexiones">
+                <span class="material-symbols-outlined">data_table</span>
+                <span class="hide-collapse">Lista bases de datos</span>
+            </a>
+
+
+
         </div>
 
-    </div>
+        <div class="user-info">
 
-    <button id="toggleTheme"
-            class="icon-btn"
-            style="margin-left:auto;">
+            <div class="user-avatar">
+                {{ user.username|first|upper }}
+            </div>
 
-        <span class="material-symbols-outlined">
-            dark_mode
-        </span>
+            <div class="hide-collapse">
 
-    </button>
+                <div style="font-size:14px;font-weight:600;">
+                    {{ user.username }}
+                </div>
 
-</div>
+                <div style="font-size:12px;color:var(--text-secondary)">
+                    Qwen3 Local
+                </div>
 
-</aside>
+            </div>
 
-<main class="main">
+            <button id="toggleTheme" class="icon-btn" style="margin-left:auto;">
+
+                <span class="material-symbols-outlined">
+                    dark_mode
+                </span>
+
+            </button>
+
+        </div>
+
+    </aside>
+
+    <main class="main">
 
 
-<div class="main-content">
+        <div class="main-content">
 
-    {% if messages %}
-        {% for message in messages %}
+            {% if messages %}
+            {% for message in messages %}
             <div style="padding:10px 20px;">
                 {{ message }}
             </div>
-        {% endfor %}
-    {% endif %}
+            {% endfor %}
+            {% endif %}
 
-    {% block content %}
+            {% block content %}
 
+            {% endblock %}
+
+        </div>
+
+    </main>
+
+    <script>
+
+        const sidebar =
+            document.getElementById("sidebar");
+
+        const toggleSidebar =
+            document.getElementById("toggleSidebar");
+
+        const toggleTheme =
+            document.getElementById("toggleTheme");
+
+        /* Sidebar */
+
+        if (localStorage.getItem("sidebar") === "collapsed") {
+            sidebar.classList.add("collapsed");
+        }
+
+        toggleSidebar.addEventListener("click", () => {
+
+            sidebar.classList.toggle("collapsed");
+
+            localStorage.setItem(
+                "sidebar",
+                sidebar.classList.contains("collapsed")
+                    ? "collapsed"
+                    : "expanded"
+            );
+
+        });
+
+        /* Theme */
+
+        if (localStorage.getItem("theme") === "light") {
+            document.body.classList.add("light");
+        }
+
+        toggleTheme.addEventListener("click", () => {
+
+            document.body.classList.toggle("light");
+
+            localStorage.setItem(
+                "theme",
+                document.body.classList.contains("light")
+                    ? "light"
+                    : "dark"
+            );
+
+        });
+
+    </script>
+
+    {% block scripts %}
     {% endblock %}
 
-</div>
-
-</main>
-
-<script>
-
-const sidebar =
-    document.getElementById("sidebar");
-
-const toggleSidebar =
-    document.getElementById("toggleSidebar");
-
-const toggleTheme =
-    document.getElementById("toggleTheme");
-
-/* Sidebar */
-
-if(localStorage.getItem("sidebar")==="collapsed"){
-    sidebar.classList.add("collapsed");
-}
-
-toggleSidebar.addEventListener("click",()=>{
-
-    sidebar.classList.toggle("collapsed");
-
-    localStorage.setItem(
-        "sidebar",
-        sidebar.classList.contains("collapsed")
-            ? "collapsed"
-            : "expanded"
-    );
-
-});
-
-/* Theme */
-
-if(localStorage.getItem("theme")==="light"){
-    document.body.classList.add("light");
-}
-
-toggleTheme.addEventListener("click",()=>{
-
-    document.body.classList.toggle("light");
-
-    localStorage.setItem(
-        "theme",
-        document.body.classList.contains("light")
-            ? "light"
-            : "dark"
-    );
-
-});
-
-</script>
-
-{% block scripts %}
-{% endblock %}
-
 </body>
+
 </html>
