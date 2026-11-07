@@ -1,0 +1,981 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block styles %}
+
+<style>
+    /* ================================
+       DASHBOARD ANALYTIX
+    ================================= */
+
+    .dashboard-page {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        padding: 28px;
+        color: var(--text);
+    }
+
+    /* HEADER */
+
+    .dashboard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 28px;
+        flex-wrap: wrap;
+    }
+
+    .dashboard-heading {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .dashboard-heading-icon {
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        background: rgba(99, 102, 241, .12);
+        color: #818cf8;
+    }
+
+    .dashboard-heading-icon span {
+        font-size: 27px;
+    }
+
+    .dashboard-heading h1 {
+        font-size: 23px;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+
+    .dashboard-heading p {
+        font-size: 13px;
+        color: var(--text-secondary);
+    }
+
+    .dashboard-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .dashboard-action {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        padding: 10px 14px;
+        border: 1px solid var(--sidebar-border);
+        border-radius: 9px;
+        background: var(--card);
+        color: var(--text);
+        font-family: inherit;
+        font-size: 12px;
+        cursor: pointer;
+        transition: .2s;
+    }
+
+    .dashboard-action:hover {
+        background: var(--sidebar-hover);
+    }
+
+    .dashboard-action span {
+        font-size: 18px;
+    }
+
+    /* INFORMACIÓN GENERAL */
+
+    .dashboard-summary {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-bottom: 25px;
+        padding: 15px 18px;
+        background: var(--card);
+        border: 1px solid var(--sidebar-border);
+        border-radius: 12px;
+    }
+
+    .summary-item {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        font-size: 12px;
+        color: var(--text-secondary);
+    }
+
+    .summary-item span.material-symbols-outlined {
+        font-size: 19px;
+        color: var(--accent);
+    }
+
+    .summary-item strong {
+        color: var(--text);
+        font-weight: 600;
+    }
+
+    /* GRID DE VISUALIZACIONES */
+
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px;
+        align-items: stretch;
+    }
+
+    /* TARJETAS */
+
+    .dashboard-widget {
+        min-width: 0;
+        min-height: 350px;
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+        background: var(--card);
+        border: 1px solid var(--sidebar-border);
+        border-radius: 14px;
+        transition: border-color .2s, transform .2s;
+    }
+
+    .dashboard-widget:hover {
+        border-color: rgba(99, 102, 241, .4);
+    }
+
+    .widget-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 18px;
+    }
+
+    .widget-title {
+        font-size: 15px;
+        font-weight: 600;
+        margin-bottom: 6px;
+    }
+
+    .widget-description {
+        font-size: 12px;
+        line-height: 1.5;
+        color: var(--text-secondary);
+    }
+
+    .widget-type {
+        flex-shrink: 0;
+        padding: 5px 8px;
+        border-radius: 6px;
+        background: rgba(99, 102, 241, .10);
+        color: #818cf8;
+        font-size: 10px;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    /* ÁREA DE GRÁFICA */
+
+    .widget-chart {
+        position: relative;
+        flex: 1;
+        min-height: 250px;
+        width: 100%;
+    }
+
+    .widget-chart canvas {
+        max-width: 100%;
+    }
+
+    /* PIE DE TARJETA */
+
+    .widget-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-top: 15px;
+        padding-top: 12px;
+        border-top: 1px solid var(--sidebar-border);
+        color: var(--text-secondary);
+        font-size: 10px;
+    }
+
+    .widget-footer span {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .widget-footer .material-symbols-outlined {
+        font-size: 15px;
+    }
+
+    /* ESTADOS */
+
+    .widget-state {
+        flex: 1;
+        min-height: 220px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        text-align: center;
+        color: var(--text-secondary);
+    }
+
+    .widget-state .material-symbols-outlined {
+        font-size: 36px;
+        opacity: .6;
+    }
+
+    .widget-state p {
+        font-size: 12px;
+    }
+
+    .widget-state.error {
+        color: #ef7777;
+    }
+
+    /* DASHBOARD VACÍO */
+
+    .dashboard-empty {
+        grid-column: 1 / -1;
+        min-height: 350px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        background: var(--card);
+        border: 1px solid var(--sidebar-border);
+        border-radius: 14px;
+        color: var(--text-secondary);
+    }
+
+    .dashboard-empty span {
+        font-size: 45px;
+        opacity: .6;
+    }
+
+    .dashboard-empty h3 {
+        font-size: 16px;
+        color: var(--text);
+    }
+
+    .dashboard-empty p {
+        font-size: 12px;
+    }
+
+    /* RESPONSIVE */
+
+    @media(max-width: 1000px) {
+        .dashboard-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media(max-width: 600px) {
+        .dashboard-page {
+            padding: 15px;
+        }
+
+        .dashboard-header {
+            align-items: flex-start;
+        }
+
+        .dashboard-heading h1 {
+            font-size: 19px;
+        }
+
+        .dashboard-summary {
+            gap: 12px;
+        }
+
+        .dashboard-widget {
+            padding: 15px;
+        }
+    }
+</style>
+
+<style>
+    .widget-content {
+        flex: 1;
+        min-width: 0;
+        min-height: 250px;
+        position: relative;
+    }
+
+    .widget-content canvas {
+        max-width: 100%;
+    }
+
+    .widget-kpi {
+        min-height: 230px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .widget-kpi-value {
+        font-size: clamp(36px, 5vw, 52px);
+        font-weight: 700;
+        color: var(--accent);
+    }
+
+    .widget-kpi-label {
+        font-size: 12px;
+        color: var(--text-secondary);
+    }
+
+    .widget-table-container {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .widget-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
+    }
+
+    .widget-table th,
+    .widget-table td {
+        padding: 12px 10px;
+        text-align: left;
+        border-bottom: 1px solid var(--sidebar-border);
+    }
+
+    .widget-table th {
+        color: var(--text-secondary);
+        font-weight: 600;
+    }
+
+    .widget-table td {
+        color: var(--text);
+    }
+
+    .widget-table tbody tr:hover {
+        background: var(--sidebar-hover);
+    }
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="dashboard-page">
+
+    <!-- ENCABEZADO -->
+
+    <header class="dashboard-header">
+
+        <div class="dashboard-heading">
+
+            <div class="dashboard-heading-icon">
+                <span class="material-symbols-outlined">
+                    query_stats
+                </span>
+            </div>
+
+            <div>
+                <h1>{{ dashboard }}</h1>
+
+                <p>
+                    Análisis de datos generado por Analytix AI
+                </p>
+            </div>
+
+        </div>
+
+        <div class="dashboard-actions">
+
+            <button type="button" class="dashboard-action" onclick="window.location.href='/synergy/'">
+
+                <span class="material-symbols-outlined">
+                    arrow_back
+                </span>
+
+                Volver
+
+            </button>
+
+            <button type="button" class="dashboard-action" onclick="window.location.reload()">
+
+                <span class="material-symbols-outlined">
+                    refresh
+                </span>
+
+                Actualizar
+
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <!-- INFORMACIÓN GENERAL -->
+
+    <section class="dashboard-summary">
+
+        <div class="summary-item">
+
+            <span class="material-symbols-outlined">
+                monitoring
+            </span>
+
+            <strong>{{ total_widgets }}</strong>
+            visualizaciones
+
+        </div>
+
+        <div class="summary-item">
+
+            <span class="material-symbols-outlined">
+                auto_awesome
+            </span>
+
+            Generado mediante IA
+
+        </div>
+
+        <div class="summary-item">
+
+            <span class="material-symbols-outlined">
+                database
+            </span>
+
+            Fuente de datos conectada
+
+        </div>
+
+    </section>
+
+
+    <!-- VISUALIZACIONES -->
+
+    <section class="dashboard-grid" id="dashboardGrid">
+
+        {% for widget in widgets %}
+
+        <article class="dashboard-widget" data-widget-id="{{ widget.id }}">
+
+            <header class="widget-header">
+
+                <div>
+
+                    <h3 class="widget-title">
+                        {{ widget.title }}
+                    </h3>
+
+                    {% if widget.description %}
+                    <p class="widget-description">
+                        {{ widget.description }}
+                    </p>
+                    {% endif %}
+
+                </div>
+
+                <span class="widget-type">
+                    {{ widget.widget_type }}
+                </span>
+
+            </header>
+
+
+            {% if widget.error %}
+
+            <div class="widget-state error">
+
+                <span class="material-symbols-outlined">
+                    warning
+                </span>
+
+                <p>{{ widget.error }}</p>
+
+            </div>
+
+            {% elif not widget.data %}
+
+            <div class="widget-state">
+
+                <span class="material-symbols-outlined">
+                    monitoring
+                </span>
+
+                <p>No hay datos disponibles para esta visualización.</p>
+
+            </div>
+
+            {% else %}
+
+            <div class="widget-content" id="widget-content-{{ widget.id }}">
+            </div>
+
+            {% endif %}
+
+
+            <footer class="widget-footer">
+
+                <span>
+                    <span class="material-symbols-outlined">
+                        table_chart
+                    </span>
+
+                    {{ widget.columns|length }} columnas
+                </span>
+
+                <span>
+                    <span class="material-symbols-outlined">
+                        update
+                    </span>
+
+                    {% if widget.last_refreshed_at %}
+                    Actualizado
+                    {% else %}
+                    Sin actualizar
+                    {% endif %}
+                </span>
+
+            </footer>
+
+        </article>
+
+        {% empty %}
+
+        <div class="dashboard-empty">
+
+            <span class="material-symbols-outlined">
+                monitoring
+            </span>
+
+            <h3>Sin visualizaciones</h3>
+
+            <p>Este dashboard todavía no contiene widgets disponibles.</p>
+
+        </div>
+
+        {% endfor %}
+
+    </section>
+
+</div>
+
+
+<!-- DATOS PARA EL MOTOR DE VISUALIZACIÓN -->
+
+{{ widgets|json_script:"dashboard-widgets-data" }}
+
+{% endblock %}
+
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+
+    
+    document.addEventListener("DOMContentLoaded", () => {
+
+        const elemento = document.getElementById("dashboard-widgets-data");
+
+        const widgets = JSON.parse(elemento.textContent);
+
+        console.log("WIDGETS:", widgets);
+
+        console.table(widgets);
+
+        widgets.forEach((widget, index) => {
+
+            console.log(`WIDGET ${index + 1}`);
+            console.log("ID:", widget.id);
+            console.log("KEY:", widget.key);
+            console.log("TITLE:", widget.title);
+            console.log("TYPE:", widget.widget_type);
+            console.log("CONFIG:", widget.config);
+            console.log("COLUMNS:", widget.columns);
+            console.log("DATA:", widget.data);
+
+        });
+
+    });
+
+
+
+    document.addEventListener("DOMContentLoaded", () => {
+
+        const elemento = document.getElementById("dashboard-widgets-data");
+
+        if (!elemento) {
+            console.error("No se encontró la información de los widgets.");
+            return;
+        }
+
+        const widgets = JSON.parse(elemento.textContent);
+
+        console.log("Dashboard recibido:", widgets);
+
+        renderizarDashboard(widgets);
+
+    });
+
+
+    /* =====================================================
+       CONFIGURACIÓN GENERAL
+    ===================================================== */
+
+    const formatoNumero = new Intl.NumberFormat("es-CO");
+
+    const colores = [
+        "#6366f1",
+        "#06b6d4",
+        "#10b981",
+        "#f59e0b",
+        "#ec4899",
+        "#8b5cf6",
+        "#14b8a6",
+        "#f97316",
+        "#64748b",
+        "#ef4444"
+    ];
+
+
+    /* =====================================================
+       RENDERIZADOR PRINCIPAL
+    ===================================================== */
+
+    function renderizarDashboard(widgets) {
+
+        widgets.forEach(widget => {
+
+            const contenedor = document.getElementById(
+                `widget-content-${widget.id}`
+            );
+
+            if (!contenedor) {
+                console.warn(`No existe el contenedor del widget: ${widget.key}`);
+                return;
+            }
+
+            if (widget.error) {
+                mostrarEstado(contenedor, widget.error, true);
+                return;
+            }
+
+            if (!Array.isArray(widget.data) || widget.data.length === 0) {
+                mostrarEstado(contenedor, "No hay datos disponibles.");
+                return;
+            }
+
+            switch (widget.widget_type) {
+
+                case "kpi":
+                    renderizarKPI(widget, contenedor);
+                    break;
+
+                case "bar":
+                    renderizarGrafica(widget, contenedor, "bar");
+                    break;
+
+                case "pie":
+                    renderizarGrafica(widget, contenedor, "pie");
+                    break;
+
+                case "line":
+                    renderizarGrafica(widget, contenedor, "line");
+                    break;
+
+                case "table":
+                    renderizarTabla(widget, contenedor);
+                    break;
+
+                default:
+                    mostrarEstado(
+                        contenedor,
+                        `Tipo de visualización no soportado: ${widget.widget_type}`,
+                        true
+                    );
+
+            }
+
+        });
+
+    }
+
+
+    /* =====================================================
+       KPI
+    ===================================================== */
+
+    function renderizarKPI(widget, contenedor) {
+
+        const columna = widget.config?.value_column;
+
+        if (!columna) {
+            mostrarEstado(contenedor, "No se configuró la columna del indicador.", true);
+            return;
+        }
+
+        const valor = widget.data[0]?.[columna];
+
+        if (valor === undefined || valor === null) {
+            mostrarEstado(contenedor, "No se encontró el valor del indicador.");
+            return;
+        }
+
+        const wrapper = document.createElement("div");
+        wrapper.className = "widget-kpi";
+
+        const numero = document.createElement("div");
+        numero.className = "widget-kpi-value";
+        numero.textContent = typeof valor === "number"
+            ? formatoNumero.format(valor)
+            : String(valor);
+
+        const etiqueta = document.createElement("div");
+        etiqueta.className = "widget-kpi-label";
+        etiqueta.textContent = widget.description || widget.title;
+
+        wrapper.append(numero, etiqueta);
+
+        contenedor.appendChild(wrapper);
+
+    }
+
+
+    /* =====================================================
+       GRÁFICAS: BAR, PIE Y LINE
+    ===================================================== */
+
+    function renderizarGrafica(widget, contenedor, tipo) {
+
+        const config = widget.config || {};
+
+        const columnaX = tipo === "pie"
+            ? config.label_column
+            : config.x_column;
+
+        const columnaY = tipo === "pie"
+            ? config.value_column
+            : config.y_column;
+
+        if (!columnaX || !columnaY) {
+            mostrarEstado(contenedor, "Configuración incompleta de la gráfica.", true);
+            return;
+        }
+
+        const labels = widget.data.map(
+            registro => registro[columnaX] ?? "Sin categoría"
+        );
+
+        const valores = widget.data.map(
+            registro => Number(registro[columnaY]) || 0
+        );
+
+        const canvas = document.createElement("canvas");
+
+        contenedor.appendChild(canvas);
+
+        const contexto = canvas.getContext("2d");
+
+        const esCircular = tipo === "pie";
+
+        new Chart(contexto, {
+
+            type: tipo,
+
+            data: {
+
+                labels: labels,
+
+                datasets: [{
+
+                    label: widget.title,
+
+                    data: valores,
+
+                    backgroundColor: esCircular
+                        ? labels.map((_, index) => colores[index % colores.length])
+                        : colores[0],
+
+                    borderColor: esCircular
+                        ? "#ffffff"
+                        : colores[0],
+
+                    borderWidth: esCircular ? 2 : 1,
+
+                    borderRadius: tipo === "bar" ? 6 : 0,
+
+                    tension: tipo === "line" ? 0.35 : 0,
+
+                    fill: tipo === "line" ? false : undefined,
+
+                    pointRadius: tipo === "line" ? 4 : undefined
+
+                }]
+
+            },
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                plugins: {
+
+                    legend: {
+                        display: esCircular,
+                        position: "bottom"
+                    },
+
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                return `${context.label}: ${formatoNumero.format(context.raw)}`;
+                            }
+                        }
+                    }
+
+                },
+
+                scales: esCircular ? {} : {
+
+                    x: {
+                        ticks: {
+                            color: "#9296a5"
+                        },
+                        grid: {
+                            display: false
+                        }
+                    },
+
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: "#9296a5",
+                            callback: value => formatoNumero.format(value)
+                        },
+                        grid: {
+                            color: "rgba(150, 150, 150, 0.12)"
+                        }
+                    }
+
+                }
+
+            }
+
+        });
+
+    }
+
+
+    /* =====================================================
+       TABLAS
+    ===================================================== */
+
+    function renderizarTabla(widget, contenedor) {
+
+        const columnas = widget.config?.columns || widget.columns || [];
+
+        if (!Array.isArray(columnas) || columnas.length === 0) {
+            mostrarEstado(contenedor, "No se configuraron las columnas de la tabla.", true);
+            return;
+        }
+
+        const wrapper = document.createElement("div");
+        wrapper.className = "widget-table-container";
+
+        const tabla = document.createElement("table");
+        tabla.className = "widget-table";
+
+        const thead = document.createElement("thead");
+        const filaCabecera = document.createElement("tr");
+
+        columnas.forEach(columna => {
+
+            const th = document.createElement("th");
+            th.textContent = columna;
+
+            filaCabecera.appendChild(th);
+
+        });
+
+        thead.appendChild(filaCabecera);
+
+        const tbody = document.createElement("tbody");
+
+        widget.data.forEach(registro => {
+
+            const fila = document.createElement("tr");
+
+            columnas.forEach(columna => {
+
+                const td = document.createElement("td");
+
+                const valor = registro[columna];
+
+                td.textContent = valor === null || valor === undefined
+                    ? "—"
+                    : typeof valor === "number"
+                        ? formatoNumero.format(valor)
+                        : String(valor);
+
+                fila.appendChild(td);
+
+            });
+
+            tbody.appendChild(fila);
+
+        });
+
+        tabla.append(thead, tbody);
+        wrapper.appendChild(tabla);
+
+        contenedor.appendChild(wrapper);
+
+    }
+
+
+    /* =====================================================
+       ESTADOS
+    ===================================================== */
+
+    function mostrarEstado(contenedor, mensaje, esError = false) {
+
+        const estado = document.createElement("div");
+
+        estado.className = esError
+            ? "widget-state error"
+            : "widget-state";
+
+        const icono = document.createElement("span");
+        icono.className = "material-symbols-outlined";
+        icono.textContent = esError ? "warning" : "info";
+
+        const texto = document.createElement("p");
+        texto.textContent = mensaje;
+
+        estado.append(icono, texto);
+
+        contenedor.appendChild(estado);
+
+    }
+
+</script>
+
+
+
+
+
+{% endblock %}

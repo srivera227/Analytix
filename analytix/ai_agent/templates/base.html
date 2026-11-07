@@ -14,11 +14,17 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
 
-    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles_base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles_modals.css' %}">
 
 
 
     {% block styles %}
+    <!--Estilos para el modal dee conexion a bd-->
+
+
+<!--Estilos para el modal de adm de conexiones-->
+
 
     {% endblock %}
 
@@ -36,7 +42,7 @@
                 <div class="logo">
 
                     <div class="logo-icon" id="toggleSidebar">
-                        <img src="{% static 'images/4.png' %}" alt="Logo de AnalytiX" class="welcome-logo">
+                        <img src="{% static 'images/analytix-icon-logo.png' %}" alt="Logo de AnalytiX"class="welcome-logo">
                     </div>
 
                     <span class="hide-collapse">
@@ -70,9 +76,19 @@
 
         <div class="sidebar-nav">
 
+            <a href="{% url 'vistaHome' %}" class="nav-item">
+                <span class="material-symbols-outlined">home</span>
+                <span class="hide-collapse">Home</span>
+            </a>
+
             <a href="#" class="nav-item">
                 <span class="material-symbols-outlined">chat</span>
                 <span class="hide-collapse">Chats</span>
+            </a>
+
+            <a href="#" class="nav-item" id="btnDashboards">
+                <span class="material-symbols-outlined">graph_3</span>
+                <span class="hide-collapse">Dashboards</span>
             </a>
 
             <a href="#" class="nav-item" id="btnBasesDatos">
@@ -91,21 +107,6 @@
 
         <div class="user-info">
 
-            <div class="user-avatar">
-                {{ user.username|first|upper }}
-            </div>
-
-            <div class="hide-collapse">
-
-                <div style="font-size:14px;font-weight:600;">
-                    {{ user.username }}
-                </div>
-
-                <div style="font-size:12px;color:var(--text-secondary)">
-                    Qwen3 Local
-                </div>
-
-            </div>
 
             <button id="toggleTheme" class="icon-btn" style="margin-left:auto;">
 
@@ -120,6 +121,378 @@
     </aside>
 
     <main class="main">
+
+        <!-- MODAL: ADMINISTRAR CONEXIONES -->
+        <div class="modal-overlay" id="modalAdministrarConexiones" hidden>
+            <section class="modal-conexiones" role="dialog" aria-modal="true"
+                aria-labelledby="tituloAdministrarConexiones">
+
+                <header class="modal-header">
+                    <div class="modal-title">
+                        <span class="material-symbols-outlined">database</span>
+                        <div>
+                            <h2 id="tituloAdministrarConexiones">Conexiones</h2>
+                            <p>Administra y selecciona la base de datos del proyecto.</p>
+                        </div>
+                    </div>
+
+                    <button type="button" class="icon-btn" id="cerrarAdministrarConexiones" aria-label="Cerrar modal">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </header>
+
+                <div class="conexion-activa-panel">
+                    <div class="conexion-activa-icono">
+                        <span class="material-symbols-outlined">database</span>
+                    </div>
+
+                    <div class="conexion-activa-info">
+                        <span class="conexion-etiqueta">CONEXIÓN ACTIVA</span>
+                        <strong id="nombreConexionActiva">Ninguna seleccionada</strong>
+                        <small id="detalleConexionActiva">
+                            Selecciona una conexión para comenzar.
+                        </small>
+                    </div>
+
+                    <span class="estado-conexion" id="estadoConexionActiva">
+                        Sin conexión
+                    </span>
+                </div>
+
+                <div class="conexiones-toolbar">
+                    <div class="conexiones-busqueda">
+                        <span class="material-symbols-outlined">search</span>
+                        <input type="search" id="buscarConexion" placeholder="Buscar conexión...">
+                    </div>
+
+                    <button type="button" class="btn-primary" id="btnNuevaConexion">
+                        <span class="material-symbols-outlined">add</span>
+                        Nueva conexión
+                    </button>
+                </div>
+
+                <div id="mensajeConexiones" class="mensaje-conexiones" hidden></div>
+
+                <div class="lista-conexiones" id="listaConexiones">
+                    <div class="conexiones-vacio">
+                        <span class="material-symbols-outlined">database</span>
+                        <p>Cargando conexiones...</p>
+                    </div>
+                </div>
+
+                <footer class="modal-footer">
+                    <span id="contadorConexiones">0 conexiones</span>
+
+                    <button type="button" class="btn-secondary" id="cancelarAdministrarConexiones">
+                        Cerrar
+                    </button>
+                </footer>
+
+            </section>
+        </div>
+
+    
+        <div class="dashboard-modal-overlay" id="modalDashboardIA" hidden>
+
+            <section class="dashboard-modal" role="dialog" aria-modal="true" aria-labelledby="tituloDashboardIA">
+
+                <header class="dashboard-modal-header">
+
+                    <div class="dashboard-modal-title">
+                        <div class="dashboard-modal-icon">
+                            <span class="material-symbols-outlined">
+                                query_stats
+                            </span>
+                        </div>
+
+                        <div>
+                            <h2 id="tituloDashboardIA">
+                                Dashboard analizado por IA
+                            </h2>
+
+                            <p>
+                                Asistente de BI · Configura el análisis de tus datos.
+                            </p>
+                        </div>
+                    </div>
+
+                    <button type="button" class="icon-btn dashboard-modal-close" id="cerrarDashboardIA"
+                        aria-label="Cerrar modal">
+
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+
+                </header>
+
+                <div class="dashboard-modal-body">
+
+                    <!-- Conexión activa -->
+                    <section class="dashboard-connection">
+
+                        <div class="dashboard-connection-icon">
+                            <span class="material-symbols-outlined">
+                                database
+                            </span>
+                        </div>
+
+                        <div class="dashboard-connection-info">
+                            <small>CONEXIÓN ACTIVA</small>
+
+                            <strong id="dashboardNombreConexion">
+                                Consultando conexión...
+                            </strong>
+
+                            <p id="dashboardDetalleConexion">
+                                Verificando la fuente de datos.
+                            </p>
+                        </div>
+
+                        <span class="dashboard-connection-status" id="dashboardEstadoConexion">
+                            Verificando
+                        </span>
+
+                    </section>
+
+                    <!-- Selección de tablas -->
+                    <section aria-labelledby="dashboardTablasTitulo">
+
+                        <div class="dashboard-tables-heading">
+                            <h3 id="dashboardTablasTitulo">
+                                Selecciona las tablas objetivo
+                            </h3>
+
+                            <span class="dashboard-selection-count" id="dashboardContadorSeleccion">
+                                0 seleccionadas
+                            </span>
+                        </div>
+
+                        <p class="dashboard-description">
+                            Selecciona las tablas que deseas analizar.
+                            La IA utilizará su estructura para identificar
+                            métricas, relaciones y visualizaciones relevantes.
+                        </p>
+
+                        <div class="dashboard-tables-toolbar">
+
+                            <label class="dashboard-table-search">
+                                <span class="material-symbols-outlined">
+                                    search
+                                </span>
+
+                                <input type="search" id="dashboardBuscarTabla" placeholder="Buscar tabla por nombre..."
+                                    autocomplete="off">
+                            </label>
+
+                            <button type="button" class="dashboard-select-all" id="dashboardSeleccionarTodas" disabled>
+                                Seleccionar todas
+                            </button>
+
+                        </div>
+
+                        <div class="dashboard-tables-list" id="dashboardListaTablas" aria-live="polite">
+
+                            <div class="dashboard-table-empty">
+                                <span class="material-symbols-outlined">
+                                    database
+                                </span>
+
+                                <p>Esperando el esquema de la conexión activa...</p>
+                            </div>
+
+                        </div>
+
+                        <div class="dashboard-table-message" id="dashboardMensaje" role="status" hidden>
+                        </div>
+
+                    </section>
+
+                </div>
+
+                <footer class="dashboard-modal-footer">
+
+                    <span class="dashboard-footer-hint" id="dashboardAyudaFooter">
+                        Selecciona al menos una tabla para continuar.
+                    </span>
+
+                    <div class="dashboard-footer-actions">
+
+                        <button type="button" class="btn-secondary" id="cancelarDashboardIA">
+                            Cancelar
+                        </button>
+
+                        <button type="button" class="btn-primary dashboard-generate-btn" id="btnGenerarDashboardIA"
+                            disabled>
+
+                            <span class="material-symbols-outlined">
+                                auto_awesome
+                            </span>
+                            Analizar y generar
+                        </button>
+
+                    </div>
+
+                </footer>
+
+            </section>
+
+        </div>
+
+        
+<div id="dbModal" class="db-modal">
+
+    <div class="db-modal-content">
+
+        <!-- Header -->
+
+        <div class="db-modal-header">
+
+            <div class="db-modal-title">
+
+                <div class="db-modal-title-icon">
+                    <span class="material-symbols-outlined">
+                        database
+                    </span>
+                </div>
+
+                <div>
+                    <h2>Conectar base de datos</h2>
+
+                    <p>
+                        Configura la fuente de datos para AnalytiX
+                    </p>
+                </div>
+
+            </div>
+
+
+            <button type="button" id="btnCerrarConexion" class="db-close">
+
+                <span class="material-symbols-outlined">
+                    close
+                </span>
+
+            </button>
+
+        </div>
+
+
+        <!-- Motor -->
+
+        <div class="db-field">
+
+            <label for="dbMotor">
+                Motor de base de datos
+            </label>
+
+            <select id="dbMotor">
+
+                <option value="postgresql">
+                    PostgreSQL
+                </option>
+
+                <option value="mysql" disabled>
+                    MySQL — próximamente
+                </option>
+
+                <option value="sqlserver" disabled>
+                    SQL Server — próximamente
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- Host + Puerto -->
+
+        <div class="db-fields-row">
+
+            <div class="db-field">
+
+                <label for="dbHost">
+                    Host
+                </label>
+
+                <input id="dbHost" type="text" value="localhost" placeholder="localhost">
+
+            </div>
+
+
+            <div class="db-field">
+
+                <label for="dbPort">
+                    Puerto
+                </label>
+
+                <input id="dbPort" type="number" value="5432" placeholder="5432">
+
+            </div>
+
+        </div>
+
+
+        <!-- Base de datos -->
+
+        <div class="db-field">
+
+            <label for="dbDatabase">
+                Base de datos
+            </label>
+
+            <input id="dbDatabase" type="text" placeholder="Nombre de la base de datos">
+
+        </div>
+
+
+        <!-- Usuario -->
+
+        <div class="db-field">
+
+            <label for="dbUser">
+                Usuario
+            </label>
+
+            <input id="dbUser" type="text" placeholder="Usuario" autocomplete="off">
+
+        </div>
+
+
+        <!-- Contraseña -->
+
+        <div class="db-field">
+
+            <label for="dbPassword">
+                Contraseña
+            </label>
+
+            <input id="dbPassword" type="password" placeholder="Contraseña" autocomplete="new-password">
+
+        </div>
+
+
+        <div class="db-divider"></div>
+
+
+        <!-- Botón -->
+
+        <button type="button" id="btnProbarConexion" class="db-connect-btn">
+
+            <span class="material-symbols-outlined">
+                cable
+            </span>
+
+            Probar conexión
+
+        </button>
+
+
+        <!-- Estado -->
+
+        <div id="dbStatus" class="db-status"></div>
+
+    </div>
+
+</div>
 
 
         <div class="main-content">
@@ -140,58 +513,11 @@
 
     </main>
 
-    <script>
 
-        const sidebar =
-            document.getElementById("sidebar");
-
-        const toggleSidebar =
-            document.getElementById("toggleSidebar");
-
-        const toggleTheme =
-            document.getElementById("toggleTheme");
-
-        /* Sidebar */
-
-        if (localStorage.getItem("sidebar") === "collapsed") {
-            sidebar.classList.add("collapsed");
-        }
-
-        toggleSidebar.addEventListener("click", () => {
-
-            sidebar.classList.toggle("collapsed");
-
-            localStorage.setItem(
-                "sidebar",
-                sidebar.classList.contains("collapsed")
-                    ? "collapsed"
-                    : "expanded"
-            );
-
-        });
-
-        /* Theme */
-
-        if (localStorage.getItem("theme") === "light") {
-            document.body.classList.add("light");
-        }
-
-        toggleTheme.addEventListener("click", () => {
-
-            document.body.classList.toggle("light");
-
-            localStorage.setItem(
-                "theme",
-                document.body.classList.contains("light")
-                    ? "light"
-                    : "dark"
-            );
-
-        });
-
-    </script>
-
+    <script src="{% static 'scripts/siderbar_serevices.js' %}"></script>
+    <script src="{% static 'scripts/conexiones_services.js' %}"></script>
     {% block scripts %}
+
     {% endblock %}
 
 </body>

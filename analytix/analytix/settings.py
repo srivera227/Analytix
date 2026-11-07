@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'ai_agent',
     'modeler',
+    'bi_agent',
 ]
 
 MIDDLEWARE = [

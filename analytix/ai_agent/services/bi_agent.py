@@ -1,10 +1,11 @@
-from .llm_service import agent_sql
+from .llm_service import agent_sql, ask_llmGemini
 from .db_service import ejecutar_sql
 from .validator_sql import validar_sql
 from .sql_service import generar_sql
+from .claude_service import consultar_claude
 
 
-def bi_agent(pregunta,schema,tablasUsadas,columnastablas):
+def ai_agent(pregunta,schema,tablasUsadas,columnastablas):
     print(f"Ejecutanto el agente...")
     # 1 generar sql
     sql = generar_sql(pregunta,schema,tablasUsadas,columnastablas)
@@ -15,7 +16,7 @@ def bi_agent(pregunta,schema,tablasUsadas,columnastablas):
     resultado = ejecutar_sql(sql)
 
     # 3 responder con datos (NO explicar)
-    respuesta = agent_sql(
+    respuesta = consultar_claude(
         prompt = f"""
         You are AnalytiX, a fast and accurate data assistant. 
         QUESTION: {pregunta} 
@@ -29,9 +30,10 @@ def bi_agent(pregunta,schema,tablasUsadas,columnastablas):
         6. For multiple records, present each record on separate lines. 
         7. Highlight only relevant information. 
         8. If there are no results, state this briefly. 
-        9. Do not invent or modify data. - You can use *, -, | to structure the answer.
+        9. Do not invent or modify data. - You can use * to structure the answer.
         """
         )
     
 
     return respuesta
+

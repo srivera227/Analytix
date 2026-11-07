@@ -92,8 +92,8 @@ def obtener_columnas(tablas=None):
 
     for tabla, columna, tipo, nullable, posicion in filas:
         resultado.setdefault(tabla, []).append({
-            "nombre": columna,
-            "tipo": tipo,
+            "column_name": columna,
+            "data_type": tipo,
             "nullable": nullable == "YES",
             "posicion": posicion
         })
